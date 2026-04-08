@@ -20,27 +20,418 @@ body{background:var(--bg);color:var(--text);font-family:'Exo 2',sans-serif;min-h
 #bgCanvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none}
 .app{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column}
 
-/* NAV */
-nav{background:rgba(7,9,15,0.96);border-bottom:1px solid var(--border);backdrop-filter:blur(20px);padding:0 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200;height:64px}
-.logo{display:flex;align-items:center;gap:10px;font-family:'Orbitron',sans-serif;font-weight:900;font-size:1.3rem;color:var(--gold)}
-.logo-icon{width:36px;height:36px;background:linear-gradient(135deg,var(--gold),#b8860b);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;box-shadow:0 0 20px rgba(245,197,24,0.4)}
-.nav-tabs{display:flex;gap:4px}
-.nav-tab{background:none;border:none;color:var(--muted);font-family:'Exo 2',sans-serif;font-size:0.82rem;font-weight:500;padding:8px 13px;border-radius:8px;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:6px;text-transform:uppercase;letter-spacing:0.05em;border:1px solid transparent}
-.nav-tab:hover{color:var(--text);background:rgba(255,255,255,0.05)}
-.nav-tab.active{color:var(--gold);background:rgba(245,197,24,0.1);border-color:rgba(245,197,24,0.2)}
+/* ========== NAVEGAÇÃO PRINCIPAL ========== */
+nav{
+  background:rgba(7,9,15,0.92);
+  border-bottom:1px solid rgba(255,255,255,0.06);
+  backdrop-filter:blur(20px);
+  padding:0 24px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  position:sticky;
+  top:0;
+  z-index:200;
+  height:64px;
+  transition:all .3s ease;
+}
+
+/* Logo - elemento principal com glow */
+.logo{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  font-family:'Orbitron',sans-serif;
+  font-weight:900;
+  font-size:1.25rem;
+  color:var(--gold);
+  text-shadow:0 0 20px rgba(245,197,24,0.3);
+  flex-shrink:0;
+  z-index:10;
+}
+.logo-icon{
+  width:38px;
+  height:38px;
+  background:linear-gradient(135deg,var(--gold),#b8860b);
+  border-radius:10px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:1.1rem;
+  box-shadow:0 0 24px rgba(245,197,24,0.5), inset 0 2px 4px rgba(255,255,255,0.2);
+  transition:all .3s ease;
+}
+.logo:hover .logo-icon{
+  transform:rotate(-5deg) scale(1.05);
+  box-shadow:0 0 32px rgba(245,197,24,0.7), inset 0 2px 4px rgba(255,255,255,0.3);
+}
+
+/* Separador vertical entre logo e menu (apenas desktop) */
+.nav-separator-desktop{
+  display:none;
+  width:1px;
+  height:28px;
+  background:linear-gradient(180deg,transparent,var(--border),transparent);
+  margin:0 20px;
+}
+
+/* ========== MENU DESKTOP (centralizado) ========== */
+.nav-desktop-menu{
+  position:absolute;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+}
+.nav-desktop-menu .nav-tabs{
+  display:flex;
+  gap:6px;
+  padding:6px 8px;
+  background:rgba(11,15,30,0.6);
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,0.04);
+  box-shadow:0 4px 24px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.03);
+}
+
+/* ========== HAMBURGER MOBILE/TABLET ========== */
+.nav-hamburger{
+  display:none;
+  flex-direction:column;
+  gap:5px;
+  background:none;
+  border:none;
+  padding:8px;
+  cursor:pointer;
+  z-index:300;
+  position:relative;
+}
+.hamburger-line{
+  width:24px;
+  height:2px;
+  background:var(--gold);
+  border-radius:2px;
+  transition:all .3s ease;
+}
+.nav-hamburger.active .hamburger-line:nth-child(1){transform:rotate(45deg) translate(5px,5px)}
+.nav-hamburger.active .hamburger-line:nth-child(2){opacity:0}
+.nav-hamburger.active .hamburger-line:nth-child(3){transform:rotate(-45deg) translate(5px,-5px)}
+
+/* ========== MENU LATERAL MOBILE ========== */
+.mobile-menu-overlay{
+  display:none;
+  position:fixed;
+  top:0;
+  left:0;
+  right:0;
+  bottom:0;
+  background:rgba(7,9,15,0.7);
+  backdrop-filter:blur(6px);
+  z-index:195;
+}
+.mobile-menu-side{
+  display:none;
+  position:fixed;
+  top:0;
+  right:-300px;
+  width:280px;
+  height:100vh;
+  background:var(--bg2);
+  border-left:1px solid var(--border);
+  z-index:200;
+  padding:0;
+  transition:right 0.3s cubic-bezier(0.4,0,0.2,1);
+  flex-direction:column;
+}
+.mobile-menu-side.active{
+  right:0;
+}
+.mobile-menu-close{
+  position:absolute;
+  top:14px;
+  right:16px;
+  background:none;
+  border:none;
+  color:var(--muted);
+  font-size:2rem;
+  cursor:pointer;
+  line-height:1;
+  transition:color .2s;
+}
+.mobile-menu-close:hover{color:var(--text)}
+.mobile-menu-header{
+  font-family:'Orbitron',sans-serif;
+  font-size:1.1rem;
+  font-weight:700;
+  color:var(--gold);
+  padding:20px 20px 12px;
+  border-bottom:1px solid var(--border);
+  margin-bottom:12px;
+}
+.mobile-menu-items{
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+  padding:0 12px;
+}
+.mobile-nav-item{
+  background:none;
+  border:none;
+  color:var(--muted);
+  font-family:'Exo 2',sans-serif;
+  font-size:0.95rem;
+  font-weight:500;
+  padding:13px 12px;
+  border-radius:10px;
+  cursor:pointer;
+  transition:all .2s;
+  text-align:left;
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.mobile-nav-item:hover{color:var(--text);background:rgba(255,255,255,0.05)}
+.mobile-nav-item.active{color:var(--gold);background:rgba(245,197,24,0.1)}
+.mobile-nav-item.premium{color:var(--premium)}
+.mobile-nav-item.admin{color:var(--admin)}
+
+/* Mobile Balances (no menu lateral) */
+.mobile-balances{
+  display:flex;
+  gap:8px;
+  padding:12px;
+  border-top:1px solid var(--border);
+  margin-top:12px;
+}
+.mobile-balances .bal-chip{
+  flex:1;
+  justify-content:center;
+  font-size:0.72rem;
+  padding:8px 10px;
+}
+
+/* ========== TABS DESKTOP ========== */
+.nav-tabs{
+  display:flex;
+  gap:6px;
+}
+
+/* Tab base */
+.nav-tab{
+  background:none;
+  border:none;
+  color:var(--muted);
+  font-family:'Exo 2',sans-serif;
+  font-size:0.78rem;
+  font-weight:600;
+  padding:10px 16px;
+  border-radius:8px;
+  cursor:pointer;
+  transition:all .25s cubic-bezier(0.4,0,0.2,1);
+  display:flex;
+  align-items:center;
+  gap:7px;
+  text-transform:uppercase;
+  letter-spacing:0.06em;
+  position:relative;
+}
+.nav-tab::after{
+  content:'';
+  position:absolute;
+  bottom:6px;
+  left:50%;
+  transform:translateX(-50%);
+  width:0;
+  height:2px;
+  background:currentColor;
+  border-radius:1px;
+  transition:width .25s ease;
+}
+.nav-tab:hover{
+  color:var(--text);
+  background:rgba(255,255,255,0.04);
+}
+.nav-tab:hover::after{width:50%}
+.nav-tab.active{
+  color:var(--gold);
+  background:rgba(245,197,24,0.08);
+}
+.nav-tab.active::after{
+  width:50%;
+  background:var(--gold);
+  box-shadow:0 0 8px var(--gold);
+}
+
+/* Variantes de cor tabs */
 .nav-tab.admin-tab{color:var(--admin)}
-.nav-tab.admin-tab.active{color:var(--admin);background:rgba(255,107,53,0.1);border-color:rgba(255,107,53,0.3)}
+.nav-tab.admin-tab.active{color:var(--admin);background:rgba(255,107,53,0.08)}
 .nav-tab.premium-tab{color:var(--premium)}
-.nav-tab.premium-tab.active{color:var(--premium);background:rgba(244,114,182,0.1);border-color:rgba(244,114,182,0.3)}
-.nav-right{display:flex;align-items:center;gap:10px}
-.bal-chip{display:flex;align-items:center;gap:5px;border-radius:20px;padding:5px 11px;font-size:0.8rem;font-weight:700;cursor:default}
-.bal-diam{background:rgba(0,229,255,0.08);border:1px solid rgba(0,229,255,0.25);color:var(--cyan)}
-.bal-coin{background:rgba(245,197,24,0.08);border:1px solid rgba(245,197,24,0.25);color:var(--gold)}
-.btn-login{background:linear-gradient(135deg,var(--gold),#b8860b);border:none;color:#000;font-family:'Exo 2',sans-serif;font-weight:700;font-size:0.82rem;padding:8px 18px;border-radius:8px;cursor:pointer;transition:all .2s;text-transform:uppercase;letter-spacing:0.05em}
-.btn-login:hover{transform:translateY(-1px);box-shadow:0 4px 20px rgba(245,197,24,0.4)}
-.avatar-btn{width:36px;height:36px;border-radius:50%;border:2px solid var(--gold);cursor:pointer;display:flex;align-items:center;justify-content:center;background:var(--bg3);font-size:1rem;transition:all .2s;font-family:'Orbitron',sans-serif;font-weight:700;color:var(--gold);position:relative}
-.avatar-btn:hover{box-shadow:0 0 14px rgba(245,197,24,0.5)}
-.avatar-premium-badge{position:absolute;bottom:-4px;right:-4px;font-size:0.65rem;background:var(--bg);border-radius:50%;width:16px;height:16px;display:flex;align-items:center;justify-content:center;border:1px solid var(--premium)}
+.nav-tab.premium-tab.active{color:var(--premium);background:rgba(244,114,182,0.08)}
+
+/* Side da direita */
+.nav-right{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  flex-shrink:0;
+}
+
+/* Bal chips aprimorados */
+.bal-chip{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  border-radius:20px;
+  padding:6px 12px;
+  font-size:0.78rem;
+  font-weight:700;
+  cursor:default;
+  transition:all .2s ease;
+  border:1px solid transparent;
+}
+.bal-diam{
+  background:linear-gradient(135deg,rgba(0,229,255,0.1),rgba(0,229,255,0.05));
+  border:1px solid rgba(0,229,255,0.3);
+  color:var(--cyan);
+  box-shadow:0 0 12px rgba(0,229,255,0.08);
+}
+.bal-diam:hover{
+  background:linear-gradient(135deg,rgba(0,229,255,0.15),rgba(0,229,255,0.08));
+  box-shadow:0 0 16px rgba(0,229,255,0.15);
+}
+.bal-coin{
+  background:linear-gradient(135deg,rgba(245,197,24,0.1),rgba(245,197,24,0.05));
+  border:1px solid rgba(245,197,24,0.3);
+  color:var(--gold);
+  box-shadow:0 0 12px rgba(245,197,24,0.08);
+}
+.bal-coin:hover{
+  background:linear-gradient(135deg,rgba(245,197,24,0.15),rgba(245,197,24,0.08));
+  box-shadow:0 0 16px rgba(245,197,24,0.15);
+}
+
+/* Botão login premium */
+.btn-login{
+  background:linear-gradient(135deg,var(--gold),#b8860b);
+  border:none;
+  color:#000;
+  font-family:'Exo 2',sans-serif;
+  font-weight:700;
+  font-size:0.82rem;
+  padding:9px 20px;
+  border-radius:8px;
+  cursor:pointer;
+  transition:all .25s ease;
+  text-transform:uppercase;
+  letter-spacing:0.05em;
+  box-shadow:0 2px 10px rgba(245,197,24,0.25);
+}
+.btn-login:hover{
+  transform:translateY(-2px);
+  box-shadow:0 6px 24px rgba(245,197,24,0.45);
+}
+
+/* Avatar btn premium */
+.avatar-btn{
+  width:38px;
+  height:38px;
+  border-radius:50%;
+  border:2px solid var(--gold);
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:var(--bg3);
+  font-size:1rem;
+  transition:all .25s ease;
+  font-family:'Orbitron',sans-serif;
+  font-weight:700;
+  color:var(--gold);
+  position:relative;
+  box-shadow:0 0 12px rgba(245,197,24,0.2);
+}
+.avatar-btn:hover{
+  transform:scale(1.08);
+  box-shadow:0 0 20px rgba(245,197,24,0.5), 0 0 40px rgba(245,197,24,0.2);
+}
+.avatar-premium-badge{
+  position:absolute;
+  bottom:-4px;
+  right:-4px;
+  font-size:0.65rem;
+  background:var(--bg);
+  border-radius:50%;
+  width:16px;
+  height:16px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border:1px solid var(--premium);
+}
+
+/* HAMBURGER MENU */
+.nav-hamburger{
+  display:none;
+  flex-direction:column;
+  gap:5px;
+  background:none;
+  border:none;
+  padding:8px;
+  cursor:pointer;
+  z-index:300;
+  position:relative;
+}
+.hamburger-line{
+  width:24px;
+  height:2px;
+  background:var(--gold);
+  border-radius:2px;
+  transition:all .3s ease;
+}
+.nav-hamburger.active .hamburger-line:nth-child(1){transform:rotate(45deg) translate(5px,5px)}
+.nav-hamburger.active .hamburger-line:nth-child(2){opacity:0}
+.nav-hamburger.active .hamburger-line:nth-child(3){transform:rotate(-45deg) translate(5px,-5px)}
+
+/* Centralizar menu horizontalmente no desktop */
+.nav-content-wrapper{
+  position:absolute;
+  left:50%;
+  transform:translateX(-50%);
+  display:flex;
+  align-items:center;
+}
+.nav-tabs{
+  display:flex;
+  gap:4px;
+}
+
+/* OVERLAY MENU MOBILE */
+.nav-overlay{
+  display:none;
+  position:fixed;
+  top:64px;
+  left:0;
+  right:0;
+  bottom:0;
+  background:rgba(7,9,15,0.6);
+  backdrop-filter:blur(4px);
+  z-index:150;
+  animation:navOverlayIn .2s ease;
+}
+@keyframes navOverlayIn{from{opacity:0}to{opacity:1}}
+
+/* Close button dentro do menu mobile */
+.close-menu-btn{
+  position:absolute;
+  top:10px;
+  right:15px;
+  background:none;
+  border:none;
+  color:var(--muted);
+  font-size:1.8rem;
+  cursor:pointer;
+  transition:color .2s;
+  line-height:1;
+}
+.close-menu-btn:hover{color:var(--text)}
 
 /* PREMIUM THEMES */
 body.theme-purple{--bg:#0a0714;--bg2:#100a1e;--bg3:#180e2a;--card:#130c1f;--border:#2d1a5a;--text:#ede9ff}
@@ -421,10 +812,81 @@ select.form-input{appearance:none}
 footer{background:var(--bg2);border-top:1px solid var(--border);padding:18px 24px;text-align:center;font-size:0.73rem;color:var(--muted)}
 footer span{color:var(--gold);font-weight:600}
 ::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
-@media(max-width:700px){
-  .nav-tabs{display:none}.grid-3{grid-template-columns:1fr}.form-row{grid-template-columns:1fr}.premium-plans{grid-template-columns:1fr}
-  .hero h1{font-size:1.9rem}.diamond-hero h1{font-size:1.7rem}.profile-header{flex-direction:column;text-align:center}
-  .hiw-steps{flex-direction:column}.page{padding:18px 12px}.admin-table-wrap{font-size:0.78rem}
+
+/* ========== MEDIA QUERIES ========== */
+
+/* Mobile (celular) - até 700px */
+@media (max-width:700px){
+  /* NAV: esconde menu desktop, mostra hamburger */
+  .nav-desktop-menu{display:none}
+  .nav-hamburger{display:flex}
+  .nav-separator-desktop{display:none}
+
+  /* Hamburger size ajustado */
+  .hamburger-line{width:22px}
+  .logo span{font-size:1.1rem}
+
+  /* Mobile Menu Side Panel */
+  .mobile-menu-overlay{display:block}
+  .mobile-menu-side{display:flex}
+  .mobile-menu-side:not(.active){right:-300px}
+
+  /* Responsividade das páginas */
+  .page{padding:16px 12px}
+  .hero h1{font-size:1.9rem}
+  .diamond-hero h1{font-size:1.7rem}
+  .grid-3{grid-template-columns:1fr}
+  .form-row{grid-template-columns:1fr}
+  .premium-plans{grid-template-columns:1fr}
+  .profile-header{flex-direction:column;text-align:center}
+  .hiw-steps{flex-direction:column}
+  .admin-table-wrap{font-size:0.78rem}
+}
+
+/* Tablet (701px - 1024px) */
+@media (min-width:701px) and (max-width:1024px){
+  nav{padding:0 16px}
+  .page{padding:24px 16px;max-width:900px}
+
+  /* Mostra menu desktop, esconde hamburger */
+  .nav-desktop-menu{display:block}
+  .nav-hamburger{display:none}
+  .nav-separator-desktop{display:block}
+
+  /* Side da direita reduzida */
+  .nav-right{gap:6px}
+  .bal-chip{padding:5px 10px;font-size:0.76rem}
+  .btn-login{padding:8px 14px;font-size:0.78rem}
+}
+
+/* Desktop (1025px+) */
+@media (min-width:1025px){
+  .nav-desktop-menu{display:block}
+  .nav-hamburger{display:none}
+  .nav-separator-desktop{display:block}
+  .page{padding:32px 24px;max-width:1200px}
+}
+  .form-row{grid-template-columns:1fr}
+  .premium-plans{grid-template-columns:1fr}
+  .hero h1{font-size:1.9rem}
+  .diamond-hero h1{font-size:1.7rem}
+  .profile-header{flex-direction:column;text-align:center}
+  .hiw-steps{flex-direction:column}
+  .page{padding:18px 12px}
+  .admin-table-wrap{font-size:0.78rem}
+  .logo span{font-size:1.1rem}
+}
+
+/* Tablet (768px - 1024px) - centralizado sem espaços laterais */
+@media (min-width:701px) and (max-width:1024px){
+  nav{padding:0 16px}
+  .page{padding:24px 16px;max-width:900px}
+  .nav-content-wrapper{left:50%}
+}
+
+/* Desktop (1025px+) - layout mais larg0 */
+@media (min-width:1025px){
+  .page{padding:32px 24px;max-width:1200px}
 }
 </style>
 </head>
@@ -435,14 +897,29 @@ footer span{color:var(--gold);font-weight:600}
 <!-- NAV -->
 <nav>
   <div class="logo"><div class="logo-icon">🪙</div>MC Coin</div>
-  <div class="nav-tabs" id="navTabs">
-    <button class="nav-tab active" onclick="showPage('shop')" id="tab-shop">🏪 Loja</button>
-    <button class="nav-tab" onclick="showPage('diamonds')" id="tab-diamonds">💎 Diamantes</button>
-    <button class="nav-tab premium-tab" onclick="showPage('premium')" id="tab-premium">👑 Premium</button>
-    <button class="nav-tab" onclick="showPage('inventory')" id="tab-inventory">🎒 Inventário</button>
-    <button class="nav-tab" onclick="showPage('profile')" id="tab-profile">👤 Perfil</button>
-    <button class="nav-tab admin-tab" onclick="showPage('admin')" id="tab-admin" style="display:none">⚙️ Admin</button>
+
+  <!-- Separador visual (apenas desktop) -->
+  <div class="nav-separator-desktop"></div>
+
+  <!-- Hamburger mobile (apenas mobile/tablet) -->
+  <button class="nav-hamburger" id="navHamburger" aria-label="Abrir menu">
+    <span class="hamburger-line"></span>
+    <span class="hamburger-line"></span>
+    <span class="hamburger-line"></span>
+  </button>
+
+  <!-- Menu Desktop - Centralizado (apenas desktop) -->
+  <div class="nav-desktop-menu">
+    <div class="nav-tabs" id="navTabs">
+      <button class="nav-tab active" onclick="showPage('shop')" id="tab-shop">🏪 Loja</button>
+      <button class="nav-tab" onclick="showPage('diamonds')" id="tab-diamonds">💎 Diamantes</button>
+      <button class="nav-tab premium-tab" onclick="showPage('premium')" id="tab-premium">👑 Premium</button>
+      <button class="nav-tab" onclick="showPage('inventory')" id="tab-inventory">🎒 Inventário</button>
+      <button class="nav-tab" onclick="showPage('profile')" id="tab-profile">👤 Perfil</button>
+      <button class="nav-tab admin-tab" onclick="showPage('admin')" id="tab-admin" style="display:none">⚙️ Admin</button>
+    </div>
   </div>
+
   <div class="nav-right">
     <div class="bal-chip bal-diam" id="navDiamBal" style="display:none">💎 <span id="navDiamonds">0</span></div>
     <div class="bal-chip bal-coin" id="navCoinBal" style="display:none">🪙 <span id="navCoins">0</span></div>
@@ -450,6 +927,16 @@ footer span{color:var(--gold);font-weight:600}
     <div class="avatar-btn" onclick="showPage('profile')" id="avatarBtn" style="display:none">?<span class="avatar-premium-badge" id="avatarPremiumBadge" style="display:none">💎</span></div>
   </div>
 </nav>
+
+<!-- Mobile Menu Side Sheet (apenas mobile/tablet) -->
+<div class="mobile-menu-overlay" id="mobileMenuOverlay" onclick="closeMobileMenu()"></div>
+<div class="mobile-menu-side" id="mobileMenuSide">
+  <button class="mobile-menu-close" id="mobileMenuClose" onclick="closeMobileMenu()">&times;</button>
+  <div class="mobile-menu-header">Menu</div>
+  <div class="mobile-menu-items" id="mobileMenuItems">
+    <!-- Preenchido dinamicamente via JS -->
+  </div>
+</div>
 
 <div class="toast-container" id="toastContainer"></div>
 
@@ -2077,11 +2564,98 @@ document.addEventListener('keydown',e=>{
 });
 
 // ============================================================
+//  RESPONSIVE MENU (Mobile/Tablet Side Panel)
+// ============================================================
+function initMobileMenu(){
+  const hamburger=document.getElementById('navHamburger');
+  const menuSide=document.getElementById('mobileMenuSide');
+  const overlay=document.getElementById('mobileMenuOverlay');
+  const closeBtn=document.getElementById('mobileMenuClose');
+  const menuItems=document.getElementById('mobileMenuItems');
+
+  if(!hamburger||!menuSide||!overlay||!closeBtn||!menuItems) return;
+
+  // Build mobile menu from nav tabs
+  buildMobileMenu();
+
+  // Toggle menu
+  hamburger.onclick=()=>{
+    const isOpen=menuSide.classList.contains('active');
+    if(isOpen){closeMobileMenu();}else{openMobileMenu();}
+  };
+
+  // Close button
+  closeBtn.onclick=closeMobileMenu;
+
+  // Rebuild mobile menu on page change
+  const origShowPage=window.showPage;
+  window.showPage=function(page){
+    origShowPage(page);
+    buildMobileMenu();
+  };
+}
+
+function buildMobileMenu(){
+  const menuItems=document.getElementById('mobileMenuItems');
+  if(!menuItems) return;
+
+  const navTabs=document.querySelectorAll('.nav-tab');
+  menuItems.innerHTML='';
+
+  navTabs.forEach(tab=>{
+    const btn=document.createElement('button');
+    const isActive=tab.classList.contains('active');
+    const isPremium=tab.classList.contains('premium-tab');
+    const isAdmin=tab.classList.contains('admin-tab');
+
+    btn.className='mobile-nav-item'+(isActive?' active':'')+(isPremium?' premium':'')+(isAdmin?' admin':'');
+    btn.textContent=tab.textContent;
+    btn.onclick=()=>{
+      tab.click();
+      closeMobileMenu();
+    };
+    menuItems.appendChild(btn);
+  });
+
+  // Add balances at bottom if logged in
+  const u=S.currentUser;
+  if(u){
+    const balDiv=document.createElement('div');
+    balDiv.className='mobile-balances';
+    balDiv.innerHTML=`
+      <div class="bal-chip bal-diam">💎 ${u.diamonds}</div>
+      <div class="bal-chip bal-coin">🪙 ${u.mcCoins}</div>
+    `;
+    menuItems.appendChild(balDiv);
+  }
+}
+
+function openMobileMenu(){
+  const menuSide=document.getElementById('mobileMenuSide');
+  const overlay=document.getElementById('mobileMenuOverlay');
+
+  if(menuSide) menuSide.classList.add('active');
+  if(overlay) overlay.classList.add('active');
+  document.body.style.overflow='hidden';
+}
+
+function closeMobileMenu(){
+  const menuSide=document.getElementById('mobileMenuSide');
+  const overlay=document.getElementById('mobileMenuOverlay');
+
+  if(menuSide) menuSide.classList.remove('active');
+  if(overlay) overlay.classList.remove('active');
+  document.body.style.overflow='';
+}
+
+// Alias global
+window.openMobileMenu=openMobileMenu;
+window.closeMobileMenu=closeMobileMenu;
+
+// ============================================================
 //  TOAST
 // ============================================================
 function toast(msg,type='info',dur=3500){
-  const icons={success:'✅',error:'❌',info:'💎',gold:'🪙',event:'🎉',premium:'👑',vip:'🥇'};
-  const d=document.createElement('div');
   d.className=`toast ${type}`;
   d.innerHTML=`<span>${icons[type]||'ℹ️'}</span><span>${msg}</span>`;
   document.getElementById('toastContainer').appendChild(d);
@@ -2111,6 +2685,7 @@ function toast(msg,type='info',dur=3500){
 // ============================================================
 //  INIT
 // ============================================================
+initMobileMenu();
 renderShop();
 renderDiamonds();
 renderPremium();
