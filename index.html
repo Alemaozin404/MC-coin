@@ -1,0 +1,2120 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MC Coin — Loja Oficial</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Exo+2:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#07090f;--bg2:#0d1120;--bg3:#141928;--card:#111827;--card2:#1a2236;
+  --gold:#f5c518;--gold2:#ffdf6e;--cyan:#00e5ff;--cyan2:#60f0ff;
+  --red:#ff3b6b;--green:#00ff88;--purple:#a855f7;--orange:#ff6b35;
+  --border:#1e2d4a;--text:#e2e8f0;--muted:#64748b;--admin:#ff6b35;
+  --event:#f59e0b;--vip:#ffd700;--pro:#a78bfa;--premium:#f472b6;
+  /* Theme overrides (premium) */
+  --theme-accent:var(--gold);--theme-font:'Exo 2';--theme-bg:var(--bg);
+}
+body{background:var(--bg);color:var(--text);font-family:'Exo 2',sans-serif;min-height:100vh;overflow-x:hidden}
+#bgCanvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none}
+.app{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column}
+
+/* NAV */
+nav{background:rgba(7,9,15,0.96);border-bottom:1px solid var(--border);backdrop-filter:blur(20px);padding:0 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200;height:64px}
+.logo{display:flex;align-items:center;gap:10px;font-family:'Orbitron',sans-serif;font-weight:900;font-size:1.3rem;color:var(--gold)}
+.logo-icon{width:36px;height:36px;background:linear-gradient(135deg,var(--gold),#b8860b);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;box-shadow:0 0 20px rgba(245,197,24,0.4)}
+.nav-tabs{display:flex;gap:4px}
+.nav-tab{background:none;border:none;color:var(--muted);font-family:'Exo 2',sans-serif;font-size:0.82rem;font-weight:500;padding:8px 13px;border-radius:8px;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:6px;text-transform:uppercase;letter-spacing:0.05em;border:1px solid transparent}
+.nav-tab:hover{color:var(--text);background:rgba(255,255,255,0.05)}
+.nav-tab.active{color:var(--gold);background:rgba(245,197,24,0.1);border-color:rgba(245,197,24,0.2)}
+.nav-tab.admin-tab{color:var(--admin)}
+.nav-tab.admin-tab.active{color:var(--admin);background:rgba(255,107,53,0.1);border-color:rgba(255,107,53,0.3)}
+.nav-tab.premium-tab{color:var(--premium)}
+.nav-tab.premium-tab.active{color:var(--premium);background:rgba(244,114,182,0.1);border-color:rgba(244,114,182,0.3)}
+.nav-right{display:flex;align-items:center;gap:10px}
+.bal-chip{display:flex;align-items:center;gap:5px;border-radius:20px;padding:5px 11px;font-size:0.8rem;font-weight:700;cursor:default}
+.bal-diam{background:rgba(0,229,255,0.08);border:1px solid rgba(0,229,255,0.25);color:var(--cyan)}
+.bal-coin{background:rgba(245,197,24,0.08);border:1px solid rgba(245,197,24,0.25);color:var(--gold)}
+.btn-login{background:linear-gradient(135deg,var(--gold),#b8860b);border:none;color:#000;font-family:'Exo 2',sans-serif;font-weight:700;font-size:0.82rem;padding:8px 18px;border-radius:8px;cursor:pointer;transition:all .2s;text-transform:uppercase;letter-spacing:0.05em}
+.btn-login:hover{transform:translateY(-1px);box-shadow:0 4px 20px rgba(245,197,24,0.4)}
+.avatar-btn{width:36px;height:36px;border-radius:50%;border:2px solid var(--gold);cursor:pointer;display:flex;align-items:center;justify-content:center;background:var(--bg3);font-size:1rem;transition:all .2s;font-family:'Orbitron',sans-serif;font-weight:700;color:var(--gold);position:relative}
+.avatar-btn:hover{box-shadow:0 0 14px rgba(245,197,24,0.5)}
+.avatar-premium-badge{position:absolute;bottom:-4px;right:-4px;font-size:0.65rem;background:var(--bg);border-radius:50%;width:16px;height:16px;display:flex;align-items:center;justify-content:center;border:1px solid var(--premium)}
+
+/* PREMIUM THEMES */
+body.theme-purple{--bg:#0a0714;--bg2:#100a1e;--bg3:#180e2a;--card:#130c1f;--border:#2d1a5a;--text:#ede9ff}
+body.theme-cyan{--bg:#050f14;--bg2:#09161e;--bg3:#0e1f28;--card:#0c1a22;--border:#0a3347;--text:#e0f7ff}
+body.theme-red{--bg:#110707;--bg2:#1a0b0b;--bg3:#22100f;--card:#1b0d0d;--border:#4a1414;--text:#ffe8e8}
+body.theme-green{--bg:#050f08;--bg2:#09170c;--bg3:#0e2014;--card:#0c1b10;--border:#0a3a1a;--text:#e0ffe8}
+body.font-orbitron{--theme-font:'Orbitron'}
+body.font-orbitron .card-desc,.card-name-sub,.info-key,.stat-label{font-family:'Orbitron',sans-serif;font-size:0.72rem}
+body.font-exo{--theme-font:'Exo 2'}
+
+/* PAGE */
+.page{display:none;flex:1;padding:32px 24px;max-width:1200px;margin:0 auto;width:100%}
+.page.active{display:block}
+
+/* HERO */
+.hero{text-align:center;padding:44px 0 36px}
+.hero h1{font-family:'Orbitron',sans-serif;font-size:2.8rem;font-weight:900;background:linear-gradient(135deg,var(--gold),var(--gold2),#b8860b);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1.1;margin-bottom:10px}
+.hero p{color:var(--muted);font-size:0.95rem}
+.hero-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(245,197,24,0.08);border:1px solid rgba(245,197,24,0.25);border-radius:20px;padding:5px 14px;font-size:0.73rem;font-weight:600;color:var(--gold);margin-bottom:18px;text-transform:uppercase;letter-spacing:0.1em}
+
+/* SECTION */
+.sec-title{display:flex;align-items:center;gap:10px;font-family:'Orbitron',sans-serif;font-size:0.82rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.15em;margin-bottom:18px}
+.sec-title::after{content:'';flex:1;height:1px;background:var(--border)}
+.sec-dot{width:6px;height:6px;border-radius:50%;background:var(--gold);box-shadow:0 0 8px var(--gold);flex-shrink:0}
+
+/* GRID */
+.grid-3{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:16px;margin-bottom:28px}
+
+/* EVENT BANNER */
+.event-banner{background:linear-gradient(135deg,rgba(245,158,11,0.08),rgba(168,85,247,0.06));border:1px solid rgba(245,158,11,0.35);border-radius:20px;padding:20px;margin-bottom:32px;position:relative;overflow:hidden}
+.event-banner::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--event),var(--purple),var(--cyan))}
+.event-banner-header{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.event-icon-big{font-size:2rem}
+.event-banner-title{font-family:'Orbitron',sans-serif;font-size:1rem;font-weight:700;color:var(--event)}
+.event-banner-sub{font-size:0.78rem;color:var(--muted)}
+.event-tag{display:inline-flex;align-items:center;gap:4px;background:rgba(245,158,11,0.15);border:1px solid rgba(245,158,11,0.4);border-radius:4px;padding:2px 8px;font-size:0.65rem;font-weight:800;color:var(--event);text-transform:uppercase;letter-spacing:0.1em}
+.event-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
+
+/* COMBO CARD */
+.combo-card{background:linear-gradient(145deg,#0f1a2e,#1a1230);border:1px solid rgba(245,158,11,0.3);border-radius:16px;padding:22px;position:relative;overflow:hidden;transition:all .3s;cursor:pointer}
+.combo-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--event),var(--purple))}
+.combo-card:hover{border-color:rgba(245,158,11,0.6);transform:translateY(-4px);box-shadow:0 12px 40px rgba(245,158,11,0.2)}
+.combo-card.esgotado{opacity:0.55;filter:grayscale(0.5);cursor:not-allowed}
+.combo-card.esgotado:hover{transform:none;box-shadow:none}
+.combo-row{display:flex;align-items:center;gap:14px;margin-bottom:16px}
+.combo-item{flex:1;text-align:center;background:rgba(255,255,255,0.04);border-radius:10px;padding:12px 8px}
+.combo-item-val{font-family:'Orbitron',sans-serif;font-size:1.5rem;font-weight:900}
+.combo-item-val.diam{color:var(--cyan)}
+.combo-item-val.coin{color:var(--gold)}
+.combo-item-label{font-size:0.7rem;color:var(--muted);margin-top:3px}
+.combo-plus{font-size:1.3rem;color:var(--muted);font-weight:700}
+.combo-price-row{display:flex;align-items:center;justify-content:space-between}
+.combo-price{font-size:1.1rem;font-weight:700;color:var(--green)}
+.stock-bar{height:4px;background:rgba(255,255,255,0.08);border-radius:2px;margin-top:12px;overflow:hidden}
+.stock-fill{height:100%;border-radius:2px;transition:width .5s}
+.stock-label{font-size:0.68rem;color:var(--muted);margin-top:5px;text-align:right}
+
+/* PRODUCT CARD */
+.prod-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:22px;position:relative;overflow:hidden;transition:all .3s;cursor:pointer;display:flex;flex-direction:column}
+.prod-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:0;transition:opacity .3s}
+.prod-card:hover:not(.esgotado){border-color:rgba(245,197,24,0.3);transform:translateY(-4px);box-shadow:0 12px 40px rgba(0,0,0,0.5)}
+.prod-card:hover:not(.esgotado)::before{opacity:1}
+.prod-card.bonus{border-color:rgba(168,85,247,0.3);background:linear-gradient(145deg,var(--card),rgba(168,85,247,0.05))}
+.prod-card.bonus::before{background:linear-gradient(90deg,transparent,var(--purple),transparent)}
+.prod-card.bonus:hover:not(.esgotado){border-color:rgba(168,85,247,0.6);box-shadow:0 12px 40px rgba(168,85,247,0.2)}
+.prod-card.diamond-card::before{background:linear-gradient(90deg,transparent,var(--cyan),transparent)}
+.prod-card.diamond-card:hover:not(.esgotado){border-color:rgba(0,229,255,0.4);box-shadow:0 12px 40px rgba(0,229,255,0.15)}
+.prod-card.diamond-card.bonus{border-color:rgba(0,229,255,0.2);background:linear-gradient(145deg,var(--card),rgba(0,229,255,0.04))}
+.prod-card.featured{border-color:rgba(245,197,24,0.5);box-shadow:0 0 20px rgba(245,197,24,0.08)}
+.prod-card.esgotado{opacity:0.5;filter:grayscale(0.6);cursor:not-allowed}
+.prod-card.vip-card{border-color:rgba(255,215,0,0.4);background:linear-gradient(145deg,var(--card),rgba(255,215,0,0.04))}
+.prod-card.vip-card::before{background:linear-gradient(90deg,transparent,var(--vip),transparent)}
+.prod-card.vip-card:hover:not(.esgotado){border-color:rgba(255,215,0,0.7);box-shadow:0 12px 40px rgba(255,215,0,0.15)}
+.prod-card.pro-card{border-color:rgba(167,139,250,0.4);background:linear-gradient(145deg,var(--card),rgba(167,139,250,0.04))}
+.prod-card.pro-card::before{background:linear-gradient(90deg,transparent,var(--pro),transparent)}
+.prod-card.pro-card:hover:not(.esgotado){border-color:rgba(167,139,250,0.7);box-shadow:0 12px 40px rgba(167,139,250,0.15)}
+.card-badge{position:absolute;top:13px;right:13px;font-size:0.62rem;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;padding:3px 8px;border-radius:4px}
+.badge-bonus{background:rgba(168,85,247,0.2);color:var(--purple);border:1px solid rgba(168,85,247,0.4)}
+.badge-common{background:rgba(100,116,139,0.15);color:var(--muted);border:1px solid rgba(100,116,139,0.2)}
+.badge-free{background:rgba(0,255,136,0.15);color:var(--green);border:1px solid rgba(0,255,136,0.3)}
+.badge-sale{background:rgba(255,59,107,0.15);color:var(--red);border:1px solid rgba(255,59,107,0.3)}
+.badge-esgotado{background:rgba(100,116,139,0.2);color:#6b7280;border:1px solid rgba(100,116,139,0.3)}
+.badge-destaque{background:rgba(245,197,24,0.15);color:var(--gold);border:1px solid rgba(245,197,24,0.35)}
+.badge-vip{background:rgba(255,215,0,0.15);color:var(--vip);border:1px solid rgba(255,215,0,0.4)}
+.badge-pro{background:rgba(167,139,250,0.15);color:var(--pro);border:1px solid rgba(167,139,250,0.4)}
+.discount-strip{position:absolute;top:0;left:0;background:var(--red);color:#fff;font-size:0.62rem;font-weight:800;padding:3px 10px 3px 8px;text-transform:uppercase;border-bottom-right-radius:8px}
+.featured-strip{position:absolute;top:0;left:0;background:linear-gradient(135deg,var(--gold),#b8860b);color:#000;font-size:0.62rem;font-weight:800;padding:3px 10px 3px 8px;text-transform:uppercase;border-bottom-right-radius:8px}
+.vip-strip{position:absolute;top:0;left:0;background:linear-gradient(135deg,var(--vip),#b8860b);color:#000;font-size:0.62rem;font-weight:800;padding:3px 10px 3px 8px;text-transform:uppercase;border-bottom-right-radius:8px}
+.pro-strip{position:absolute;top:0;left:0;background:linear-gradient(135deg,var(--pro),#7c3aed);color:#fff;font-size:0.62rem;font-weight:800;padding:3px 10px 3px 8px;text-transform:uppercase;border-bottom-right-radius:8px}
+.card-icon{font-size:2.6rem;margin-bottom:10px;display:block;filter:drop-shadow(0 0 10px rgba(245,197,24,0.4))}
+.card-icon.diamond-icon{filter:drop-shadow(0 0 10px rgba(0,229,255,0.5))}
+.card-name{font-family:'Orbitron',sans-serif;font-size:0.9rem;font-weight:700;margin-bottom:5px}
+.card-desc{color:var(--muted);font-size:0.78rem;margin-bottom:14px;line-height:1.4}
+.card-amount{display:flex;align-items:baseline;gap:6px;margin-bottom:6px}
+.card-amount .value{font-size:1.9rem;font-weight:700;font-family:'Orbitron',sans-serif;color:var(--gold)}
+.card-amount .unit{color:var(--muted);font-size:0.78rem}
+.card-bonus-tag{display:inline-flex;align-items:center;gap:4px;background:rgba(168,85,247,0.1);border:1px solid rgba(168,85,247,0.25);border-radius:4px;padding:2px 8px;font-size:0.7rem;color:var(--purple);font-weight:600;margin-bottom:12px}
+.card-price{display:flex;align-items:center;justify-content:space-between;margin-top:auto}
+.price-val{display:flex;align-items:center;gap:4px;font-size:0.9rem;font-weight:700}
+.price-val .di{color:var(--cyan)}
+.price-val .rs{color:var(--green)}
+.price-old{text-decoration:line-through;color:var(--muted);font-size:0.73rem;margin-left:2px}
+.btn-buy{background:linear-gradient(135deg,var(--gold),#b8860b);border:none;color:#000;font-family:'Exo 2',sans-serif;font-weight:700;font-size:0.76rem;padding:8px 14px;border-radius:8px;cursor:pointer;transition:all .2s;text-transform:uppercase;letter-spacing:0.04em;white-space:nowrap}
+.btn-buy:hover{transform:scale(1.05);box-shadow:0 4px 14px rgba(245,197,24,0.4)}
+.btn-buy.diamond-buy{background:linear-gradient(135deg,var(--cyan),#0097a7);color:#000}
+.btn-buy.free-buy{background:linear-gradient(135deg,var(--green),#00a855);color:#000}
+.btn-buy.disabled-buy{background:rgba(100,116,139,0.2);color:var(--muted);cursor:not-allowed}
+.btn-buy.disabled-buy:hover{transform:none;box-shadow:none}
+.btn-buy.event-buy{background:linear-gradient(135deg,var(--event),#b45309);color:#000}
+.btn-buy.vip-buy{background:linear-gradient(135deg,var(--vip),#b8860b);color:#000}
+.btn-buy.pro-buy{background:linear-gradient(135deg,var(--pro),#7c3aed);color:#fff}
+.btn-buy.locked-buy{background:rgba(100,116,139,0.15);border:1px solid rgba(100,116,139,0.3);color:var(--muted);cursor:not-allowed;font-size:0.72rem}
+.btn-buy.locked-buy:hover{transform:none;box-shadow:none}
+.stock-info{display:flex;align-items:center;gap:6px;margin-top:8px;font-size:0.72rem;color:var(--muted)}
+.stock-info .stock-dot{width:6px;height:6px;border-radius:50%;background:var(--green);flex-shrink:0}
+.stock-info .stock-dot.low{background:var(--event)}
+.stock-info .stock-dot.out{background:var(--red)}
+
+/* LOCKED SECTION */
+.locked-section{background:rgba(100,116,139,0.06);border:1px solid rgba(100,116,139,0.15);border-radius:16px;padding:28px;text-align:center;margin-bottom:24px;position:relative;overflow:hidden}
+.locked-section::before{content:'🔒';font-size:3rem;display:block;margin-bottom:12px;opacity:0.5}
+.locked-section h3{font-family:'Orbitron',sans-serif;font-size:0.9rem;color:var(--muted);margin-bottom:6px}
+.locked-section p{font-size:0.8rem;color:var(--muted)}
+
+/* PREMIUM SECTION */
+.premium-section{padding:32px 24px;max-width:1200px;margin:0 auto;width:100%}
+.premium-hero{text-align:center;padding:36px 0 32px}
+.premium-hero h1{font-family:'Orbitron',sans-serif;font-size:2.4rem;font-weight:900;background:linear-gradient(135deg,var(--premium),#ec4899,#f97316);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:10px}
+.premium-plans{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px;margin-bottom:32px}
+.plan-card{border-radius:20px;padding:28px;position:relative;overflow:hidden;transition:all .3s;cursor:pointer}
+.plan-card.plan-base{background:linear-gradient(145deg,#0f1a2e,#1a1230);border:1px solid rgba(255,215,0,0.3)}
+.plan-card.plan-pro{background:linear-gradient(145deg,#130e24,#1e1040);border:1px solid rgba(167,139,250,0.4)}
+.plan-card.plan-premium{background:linear-gradient(145deg,#1a0e1e,#0e0818);border:1px solid rgba(244,114,182,0.5);box-shadow:0 0 30px rgba(244,114,182,0.1)}
+.plan-card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px}
+.plan-card.plan-base::before{background:linear-gradient(90deg,var(--vip),#b8860b)}
+.plan-card.plan-pro::before{background:linear-gradient(90deg,var(--pro),#7c3aed)}
+.plan-card.plan-premium::before{background:linear-gradient(90deg,var(--premium),#ec4899,#f97316)}
+.plan-card:hover{transform:translateY(-5px)}
+.plan-card.plan-base:hover{box-shadow:0 12px 40px rgba(255,215,0,0.2)}
+.plan-card.plan-pro:hover{box-shadow:0 12px 40px rgba(167,139,250,0.2)}
+.plan-card.plan-premium:hover{box-shadow:0 12px 40px rgba(244,114,182,0.25)}
+.plan-badge{display:inline-flex;align-items:center;gap:5px;font-size:0.65rem;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;padding:3px 10px;border-radius:4px;margin-bottom:12px}
+.plan-badge.base{background:rgba(255,215,0,0.15);color:var(--vip);border:1px solid rgba(255,215,0,0.3)}
+.plan-badge.pro{background:rgba(167,139,250,0.15);color:var(--pro);border:1px solid rgba(167,139,250,0.3)}
+.plan-badge.premium{background:rgba(244,114,182,0.15);color:var(--premium);border:1px solid rgba(244,114,182,0.4)}
+.plan-name{font-family:'Orbitron',sans-serif;font-size:1.3rem;font-weight:900;margin-bottom:6px}
+.plan-card.plan-base .plan-name{color:var(--vip)}
+.plan-card.plan-pro .plan-name{color:var(--pro)}
+.plan-card.plan-premium .plan-name{color:var(--premium)}
+.plan-desc{font-size:0.8rem;color:var(--muted);margin-bottom:18px}
+.plan-features{list-style:none;margin-bottom:20px}
+.plan-features li{display:flex;align-items:flex-start;gap:8px;font-size:0.82rem;padding:5px 0;border-bottom:1px solid rgba(255,255,255,0.05)}
+.plan-features li:last-child{border:none}
+.plan-features .feat-icon{font-size:0.9rem;flex-shrink:0;margin-top:1px}
+.plan-active-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(0,255,136,0.1);border:1px solid rgba(0,255,136,0.3);color:var(--green);font-size:0.72rem;font-weight:700;padding:4px 10px;border-radius:6px;margin-top:8px}
+.btn-activate{width:100%;border:none;font-family:'Exo 2',sans-serif;font-weight:700;font-size:0.88rem;padding:12px;border-radius:10px;cursor:pointer;transition:all .2s;text-transform:uppercase;letter-spacing:0.05em;margin-top:4px}
+.btn-activate.base{background:linear-gradient(135deg,var(--vip),#b8860b);color:#000}
+.btn-activate.pro{background:linear-gradient(135deg,var(--pro),#7c3aed);color:#fff}
+.btn-activate.premium{background:linear-gradient(135deg,var(--premium),#ec4899);color:#fff}
+.btn-activate:hover{transform:translateY(-1px)}
+.btn-activate.base:hover{box-shadow:0 4px 20px rgba(255,215,0,0.4)}
+.btn-activate.pro:hover{box-shadow:0 4px 20px rgba(167,139,250,0.4)}
+.btn-activate.premium:hover{box-shadow:0 4px 20px rgba(244,114,182,0.4)}
+.most-popular-tag{position:absolute;top:20px;right:20px;background:linear-gradient(135deg,var(--premium),#ec4899);color:#fff;font-size:0.62rem;font-weight:800;padding:3px 8px;border-radius:4px;text-transform:uppercase}
+
+/* VIP / PRO SECTIONS */
+.vip-banner{background:linear-gradient(135deg,rgba(255,215,0,0.08),rgba(255,165,0,0.04));border:2px solid rgba(255,215,0,0.3);border-radius:20px;padding:20px;margin-bottom:24px;position:relative;overflow:hidden}
+.vip-banner::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--vip),#ffd700,#b8860b)}
+.pro-banner{background:linear-gradient(135deg,rgba(167,139,250,0.08),rgba(124,58,237,0.04));border:2px solid rgba(167,139,250,0.3);border-radius:20px;padding:20px;margin-bottom:24px;position:relative;overflow:hidden}
+.pro-banner::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--pro),#7c3aed)}
+.premium-daily-banner{background:linear-gradient(135deg,rgba(244,114,182,0.1),rgba(236,72,153,0.05));border:2px solid rgba(244,114,182,0.3);border-radius:16px;padding:18px;margin-bottom:24px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+
+/* MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.82);backdrop-filter:blur(10px);z-index:1000;align-items:center;justify-content:center;padding:16px}
+.modal-overlay.open{display:flex}
+.modal{background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:32px;width:100%;max-width:440px;position:relative;animation:slideUp .3s ease;max-height:90vh;overflow-y:auto}
+.modal-wide{max-width:620px}
+@keyframes slideUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+.modal-title{font-family:'Orbitron',sans-serif;font-size:1.15rem;font-weight:700;margin-bottom:5px;color:var(--gold)}
+.modal-sub{color:var(--muted);font-size:0.8rem;margin-bottom:24px}
+.modal-close{position:absolute;top:14px;right:14px;background:none;border:none;color:var(--muted);font-size:1.3rem;cursor:pointer;transition:color .2s;line-height:1}
+.modal-close:hover{color:var(--text)}
+.form-group{margin-bottom:16px}
+.form-group label{display:block;font-size:0.75rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:6px}
+.form-input{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:10px 13px;color:var(--text);font-family:'Exo 2',sans-serif;font-size:0.88rem;transition:border .2s;outline:none}
+.form-input:focus{border-color:var(--gold)}
+.form-input[type=number]{appearance:textfield}
+select.form-input{appearance:none}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.form-check{display:flex;align-items:center;gap:8px;cursor:pointer;font-size:0.84rem;color:var(--text)}
+.form-check input[type=checkbox]{width:16px;height:16px;accent-color:var(--gold);cursor:pointer}
+.btn-primary{width:100%;background:linear-gradient(135deg,var(--gold),#b8860b);border:none;color:#000;font-family:'Exo 2',sans-serif;font-weight:700;font-size:0.88rem;padding:12px;border-radius:10px;cursor:pointer;transition:all .2s;text-transform:uppercase;letter-spacing:0.05em;margin-top:4px}
+.btn-primary:hover{box-shadow:0 4px 20px rgba(245,197,24,0.4);transform:translateY(-1px)}
+.btn-secondary{width:100%;background:transparent;border:1px solid var(--border);color:var(--text);font-family:'Exo 2',sans-serif;font-weight:600;font-size:0.84rem;padding:10px;border-radius:10px;cursor:pointer;transition:all .2s;margin-top:8px}
+.btn-secondary:hover{border-color:var(--gold);color:var(--gold)}
+.form-switch{text-align:center;margin-top:14px;font-size:0.8rem;color:var(--muted)}
+.form-switch a{color:var(--gold);cursor:pointer;font-weight:600}
+.msg-error{background:rgba(255,59,107,0.1);border:1px solid rgba(255,59,107,0.3);border-radius:8px;padding:9px 12px;font-size:0.8rem;color:var(--red);margin-bottom:12px;display:none}
+.msg-error.show{display:block}
+.msg-success{background:rgba(0,255,136,0.1);border:1px solid rgba(0,255,136,0.3);border-radius:8px;padding:9px 12px;font-size:0.8rem;color:var(--green);margin-bottom:12px;display:none}
+.msg-success.show{display:block}
+
+/* KEY INPUT special style */
+.key-input-wrap{position:relative;margin-bottom:8px}
+.key-input{font-family:'Orbitron',sans-serif;font-size:0.9rem;letter-spacing:0.15em;border-color:rgba(0,229,255,0.4) !important;color:var(--cyan) !important;text-align:center;text-transform:uppercase}
+.key-input:focus{border-color:var(--cyan) !important;box-shadow:0 0 12px rgba(0,229,255,0.2)}
+.key-hint{font-size:0.72rem;color:var(--muted);text-align:center;margin-bottom:16px}
+.key-divider{display:flex;align-items:center;gap:10px;margin:16px 0;color:var(--muted);font-size:0.74rem}
+.key-divider::before,.key-divider::after{content:'';flex:1;height:1px;background:var(--border)}
+.security-badge{display:flex;align-items:center;gap:8px;background:rgba(0,229,255,0.06);border:1px solid rgba(0,229,255,0.2);border-radius:8px;padding:8px 12px;margin-bottom:16px;font-size:0.76rem;color:var(--cyan)}
+
+/* CONFIRM POPUP */
+.confirm-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.88);backdrop-filter:blur(12px);z-index:2000;align-items:center;justify-content:center}
+.confirm-overlay.open{display:flex}
+.confirm-box{background:var(--bg2);border:1px solid rgba(255,59,107,0.4);border-radius:20px;padding:36px 32px;max-width:380px;width:100%;text-align:center;animation:slideUp .25s ease;position:relative}
+.confirm-box::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,var(--red),transparent);border-radius:20px 20px 0 0}
+.confirm-warning-icon{font-size:3.5rem;margin-bottom:16px;display:block}
+.confirm-title{font-family:'Orbitron',sans-serif;font-size:1.4rem;font-weight:900;color:var(--red);margin-bottom:10px;letter-spacing:0.05em}
+.confirm-desc{color:var(--muted);font-size:0.85rem;line-height:1.5;margin-bottom:28px}
+.confirm-desc strong{color:var(--text)}
+.confirm-btns{display:flex;gap:10px}
+.confirm-btn-cancel{flex:1;background:var(--bg3);border:1px solid var(--border);color:var(--text);font-family:'Exo 2',sans-serif;font-weight:700;font-size:0.85rem;padding:12px;border-radius:10px;cursor:pointer;transition:all .2s}
+.confirm-btn-cancel:hover{border-color:var(--gold);color:var(--gold)}
+.confirm-btn-ok{flex:1;background:linear-gradient(135deg,var(--red),#b02040);border:none;color:#fff;font-family:'Exo 2',sans-serif;font-weight:700;font-size:0.85rem;padding:12px;border-radius:10px;cursor:pointer;transition:all .2s}
+.confirm-btn-ok:hover{box-shadow:0 4px 16px rgba(255,59,107,0.5);transform:translateY(-1px)}
+
+/* BUY CONFIRM */
+.amount-big{text-align:center;padding:18px;border:1px solid var(--border);border-radius:12px;margin-bottom:18px;background:var(--bg3)}
+.amount-big .num{font-family:'Orbitron',sans-serif;font-size:2.4rem;font-weight:900;color:var(--gold)}
+.amount-big .label{font-size:0.78rem;color:var(--muted);margin-top:2px}
+.cost-row{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid rgba(30,45,74,0.6);font-size:0.83rem}
+.cost-row:last-of-type{border:none;font-weight:700;font-size:0.92rem}
+.pay-methods{display:flex;gap:8px;margin:12px 0 16px;flex-wrap:wrap}
+.pay-method{flex:1;min-width:80px;background:var(--bg3);border:2px solid var(--border);border-radius:10px;padding:9px 6px;text-align:center;cursor:pointer;transition:all .2s;font-size:0.72rem;color:var(--muted)}
+.pay-method:hover{border-color:rgba(245,197,24,0.3);color:var(--text)}
+.pay-method.selected{border-color:var(--gold);color:var(--gold);background:rgba(245,197,24,0.06)}
+.pay-method .pm-icon{font-size:1.3rem;margin-bottom:3px}
+
+/* INVENTORY */
+.inv-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(175px,1fr));gap:14px;margin-bottom:28px}
+.inv-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;cursor:pointer;transition:all .3s;text-align:center;position:relative}
+.inv-card:hover{border-color:rgba(245,197,24,0.4);transform:translateY(-3px);box-shadow:0 8px 28px rgba(0,0,0,0.4)}
+.inv-card-icon{font-size:2rem;margin-bottom:8px;filter:drop-shadow(0 0 8px rgba(245,197,24,0.3))}
+.inv-card-name{font-size:0.74rem;font-weight:700;font-family:'Orbitron',sans-serif;margin-bottom:4px;color:var(--text);line-height:1.3}
+.inv-card-amount{font-size:1.2rem;font-weight:700;color:var(--gold);font-family:'Orbitron',sans-serif}
+.inv-card-amount.diam{color:var(--cyan)}
+.inv-card-date{font-size:0.62rem;color:var(--muted);margin-top:5px}
+.inv-bonus-pip{position:absolute;top:9px;right:9px;width:8px;height:8px;border-radius:50%;background:var(--purple);box-shadow:0 0 6px var(--purple)}
+.inv-empty{text-align:center;padding:60px 20px;color:var(--muted)}
+.inv-empty .big-icon{font-size:4rem;margin-bottom:14px;opacity:0.35}
+.inv-empty h3{font-family:'Orbitron',sans-serif;font-size:0.95rem;font-weight:600;margin-bottom:8px}
+.inv-del-btn{position:absolute;bottom:8px;right:8px;background:rgba(255,59,107,0.08);border:1px solid rgba(255,59,107,0.2);color:var(--red);font-size:0.7rem;padding:2px 7px;border-radius:5px;cursor:pointer;transition:all .2s;font-family:'Exo 2',sans-serif;font-weight:600;display:none}
+.inv-card:hover .inv-del-btn{display:block}
+.inv-del-btn:hover{background:rgba(255,59,107,0.2)}
+
+/* INVENTORY DETAIL MODAL */
+.inv-modal-header{text-align:center;margin-bottom:22px}
+.inv-modal-icon{font-size:3.5rem;filter:drop-shadow(0 0 18px rgba(245,197,24,0.5));margin-bottom:8px}
+.inv-modal-name{font-family:'Orbitron',sans-serif;font-size:1rem;font-weight:700;color:var(--gold)}
+.inv-details-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.inv-detail{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:13px}
+.inv-detail-label{font-size:0.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:4px}
+.inv-detail-val{font-size:0.9rem;font-weight:600}
+.inv-footer-row{display:flex;justify-content:space-between;align-items:flex-end;background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:13px}
+
+/* PROFILE */
+.profile-header{border-radius:20px;padding:28px;display:flex;align-items:center;gap:22px;margin-bottom:22px;position:relative;overflow:hidden;transition:background .4s,border .4s}
+.profile-header.default{background:var(--card);border:1px solid var(--border)}
+.profile-header.theme-gold{background:linear-gradient(135deg,rgba(245,197,24,0.1),rgba(184,134,11,0.05));border:1px solid rgba(245,197,24,0.3)}
+.profile-header.theme-cyan{background:linear-gradient(135deg,rgba(0,229,255,0.08),rgba(0,151,167,0.04));border:1px solid rgba(0,229,255,0.25)}
+.profile-header.theme-purple{background:linear-gradient(135deg,rgba(168,85,247,0.1),rgba(124,58,237,0.05));border:1px solid rgba(168,85,247,0.3)}
+.profile-header.theme-pink{background:linear-gradient(135deg,rgba(244,114,182,0.1),rgba(236,72,153,0.05));border:1px solid rgba(244,114,182,0.3)}
+.profile-avatar{width:72px;height:72px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.8rem;border:3px solid var(--gold);box-shadow:0 0 22px rgba(245,197,24,0.3);font-family:'Orbitron',sans-serif;font-weight:700;color:#000;position:relative;flex-shrink:0;background:linear-gradient(135deg,var(--gold),#b8860b)}
+.profile-avatar .crown{position:absolute;top:-13px;left:50%;transform:translateX(-50%);font-size:1.1rem}
+.profile-avatar .diam-badge{position:absolute;bottom:-6px;right:-6px;font-size:1.1rem;filter:drop-shadow(0 0 6px rgba(0,229,255,0.8))}
+.profile-stats{display:flex;gap:20px;flex-wrap:wrap}
+.stat-val{font-size:1.4rem;font-weight:700;font-family:'Orbitron',sans-serif}
+.stat-val.g{color:var(--gold)}.stat-val.c{color:var(--cyan)}
+.stat-label{font-size:0.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em}
+.profile-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px}
+.profile-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px}
+.profile-card h3{font-family:'Orbitron',sans-serif;font-size:0.78rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:14px}
+.info-row{display:flex;justify-content:space-between;font-size:0.83rem;padding:6px 0;border-bottom:1px solid rgba(30,45,74,0.5)}
+.info-row:last-child{border:none}
+.info-key{color:var(--muted)}.info-val{font-weight:600}
+.btn-action{width:100%;border:1px solid var(--border);color:var(--text);font-family:'Exo 2',sans-serif;font-weight:600;font-size:0.82rem;padding:9px;border-radius:8px;cursor:pointer;transition:all .2s;background:var(--bg3);margin-top:8px}
+.btn-action.danger{border-color:rgba(255,59,107,0.3);color:var(--red)}
+.btn-action:hover{border-color:var(--gold);color:var(--gold)}
+.btn-action.danger:hover{background:rgba(255,59,107,0.1);border-color:var(--red)}
+.btn-save{width:100%;background:linear-gradient(135deg,var(--green),#00a855);border:none;color:#000;font-family:'Exo 2',sans-serif;font-weight:700;font-size:0.82rem;padding:10px;border-radius:8px;cursor:pointer;transition:all .2s;text-transform:uppercase;margin-top:6px}
+.btn-save:hover{box-shadow:0 4px 14px rgba(0,255,136,0.3);transform:translateY(-1px)}
+
+/* Theme color swatches */
+.theme-swatches{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.swatch{width:32px;height:32px;border-radius:50%;cursor:pointer;border:3px solid transparent;transition:all .2s}
+.swatch:hover,.swatch.active{border-color:#fff;transform:scale(1.15)}
+.swatch.gold{background:linear-gradient(135deg,var(--vip),#b8860b)}
+.swatch.cyan{background:linear-gradient(135deg,#00e5ff,#0097a7)}
+.swatch.purple-s{background:linear-gradient(135deg,#a855f7,#7c3aed)}
+.swatch.pink-s{background:linear-gradient(135deg,#f472b6,#ec4899)}
+.swatch.default{background:linear-gradient(135deg,#1e2d4a,#07090f)}
+.font-btns{display:flex;gap:8px;margin-top:8px}
+.font-btn{flex:1;border:1px solid var(--border);background:var(--bg3);color:var(--muted);padding:6px;border-radius:6px;cursor:pointer;font-size:0.76rem;transition:all .2s;text-align:center}
+.font-btn:hover,.font-btn.active{border-color:var(--gold);color:var(--gold)}
+
+/* ADMIN */
+.admin-header{background:linear-gradient(135deg,rgba(255,107,53,0.1),rgba(255,59,107,0.05));border:1px solid rgba(255,107,53,0.3);border-radius:16px;padding:18px 22px;margin-bottom:22px;display:flex;align-items:center;gap:14px}
+.admin-tabs{display:flex;gap:8px;margin-bottom:22px;flex-wrap:wrap}
+.admin-tab{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:8px 16px;font-size:0.78rem;font-weight:600;color:var(--muted);cursor:pointer;transition:all .2s}
+.admin-tab:hover{color:var(--text);border-color:rgba(255,107,53,0.3)}
+.admin-tab.active{color:var(--admin);border-color:rgba(255,107,53,0.4);background:rgba(255,107,53,0.08)}
+.admin-section{display:none}
+.admin-section.active{display:block}
+.admin-table-wrap{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;overflow-x:auto}
+.admin-table-wrap table{width:100%;border-collapse:collapse;min-width:600px}
+.admin-table-wrap th{background:var(--bg3);padding:11px 14px;text-align:left;font-size:0.69rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;border-bottom:1px solid var(--border);white-space:nowrap}
+.admin-table-wrap td{padding:11px 14px;font-size:0.82rem;border-bottom:1px solid rgba(30,45,74,0.4);vertical-align:middle}
+.admin-table-wrap tr:last-child td{border-bottom:none}
+.admin-table-wrap tr:hover td{background:rgba(255,255,255,0.018)}
+.btn-edit{background:rgba(0,229,255,0.1);border:1px solid rgba(0,229,255,0.3);color:var(--cyan);font-size:0.72rem;padding:4px 9px;border-radius:6px;cursor:pointer;transition:all .2s;font-family:'Exo 2',sans-serif;font-weight:600}
+.btn-edit:hover{background:rgba(0,229,255,0.2)}
+.btn-del{background:rgba(255,59,107,0.1);border:1px solid rgba(255,59,107,0.3);color:var(--red);font-size:0.72rem;padding:4px 9px;border-radius:6px;cursor:pointer;transition:all .2s;font-family:'Exo 2',sans-serif;font-weight:600}
+.btn-del:hover{background:rgba(255,59,107,0.2)}
+.btn-add{background:linear-gradient(135deg,var(--admin),#cc4020);border:none;color:#fff;font-family:'Exo 2',sans-serif;font-weight:700;font-size:0.8rem;padding:9px 16px;border-radius:8px;cursor:pointer;transition:all .2s;text-transform:uppercase}
+.btn-add:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(255,107,53,0.4)}
+.admin-toolbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:10px}
+.admin-toolbar h3{font-family:'Orbitron',sans-serif;font-size:0.88rem;font-weight:700}
+.tag{display:inline-block;font-size:0.62rem;font-weight:800;padding:2px 7px;border-radius:4px;text-transform:uppercase;letter-spacing:0.05em}
+.tag-bonus{background:rgba(168,85,247,0.15);color:var(--purple);border:1px solid rgba(168,85,247,0.3)}
+.tag-free{background:rgba(0,255,136,0.15);color:var(--green);border:1px solid rgba(0,255,136,0.3)}
+.tag-sale{background:rgba(255,59,107,0.15);color:var(--red);border:1px solid rgba(255,59,107,0.3)}
+.tag-none{background:rgba(100,116,139,0.1);color:var(--muted);border:1px solid rgba(100,116,139,0.2)}
+.tag-esgotado{background:rgba(100,116,139,0.15);color:#6b7280;border:1px solid rgba(100,116,139,0.25)}
+.tag-destaque{background:rgba(245,197,24,0.12);color:var(--gold);border:1px solid rgba(245,197,24,0.3)}
+.tag-evento{background:rgba(245,158,11,0.15);color:var(--event);border:1px solid rgba(245,158,11,0.3)}
+.key-copy-btn{background:rgba(0,229,255,0.1);border:1px solid rgba(0,229,255,0.3);color:var(--cyan);font-size:0.72rem;padding:4px 9px;border-radius:6px;cursor:pointer;font-family:'Exo 2',sans-serif;font-weight:600;transition:all .2s}
+.key-copy-btn:hover{background:rgba(0,229,255,0.2)}
+
+/* KEY MANAGEMENT */
+.key-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px}
+.key-val{font-family:'Orbitron',sans-serif;font-size:0.82rem;color:var(--cyan);letter-spacing:0.1em}
+.key-meta{font-size:0.7rem;color:var(--muted)}
+.key-used{opacity:0.5}
+.key-used .key-val{text-decoration:line-through;color:var(--muted)}
+
+/* User row expandable */
+.user-row{cursor:pointer}
+.user-row:hover td{background:rgba(255,107,53,0.04) !important}
+.inv-admin-grid{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
+.inv-admin-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px;display:flex;align-items:center;gap:10px;min-width:200px;position:relative}
+.inv-admin-card-del{position:absolute;top:6px;right:6px;background:none;border:none;color:var(--red);cursor:pointer;font-size:0.85rem;opacity:0.6;transition:opacity .2s}
+.inv-admin-card-del:hover{opacity:1}
+
+/* DIAMOND PAGE */
+.diamond-hero{text-align:center;padding:36px 0 28px}
+.diamond-hero h1{font-family:'Orbitron',sans-serif;font-size:2.4rem;font-weight:900;background:linear-gradient(135deg,var(--cyan),var(--cyan2),#0097a7);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:10px}
+.diamond-hero p{color:var(--muted);font-size:0.92rem}
+.hiw-steps{display:flex;gap:14px;margin-bottom:32px;flex-wrap:wrap}
+.hiw-step{flex:1;min-width:160px;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;text-align:center}
+.hiw-num{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.85rem;margin:0 auto 10px}
+.hiw-step p{font-size:0.77rem;color:var(--muted);line-height:1.4}
+.hiw-step strong{color:var(--text);display:block;margin-bottom:4px;font-size:0.85rem}
+/* Security banner */
+.security-notice{background:rgba(0,229,255,0.05);border:1px solid rgba(0,229,255,0.2);border-radius:12px;padding:12px 16px;margin-bottom:22px;display:flex;align-items:center;gap:10px;font-size:0.78rem;color:var(--cyan)}
+
+/* TOAST */
+.toast-container{position:fixed;top:76px;right:18px;z-index:3000;display:flex;flex-direction:column;gap:8px;pointer-events:none}
+.toast{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:11px 16px;min-width:250px;display:flex;align-items:center;gap:9px;font-size:0.83rem;animation:toastIn .3s ease;box-shadow:0 8px 28px rgba(0,0,0,0.6);pointer-events:all}
+@keyframes toastIn{from{opacity:0;transform:translateX(28px)}to{opacity:1;transform:translateX(0)}}
+.toast.success{border-color:rgba(0,255,136,0.35);color:var(--green)}
+.toast.error{border-color:rgba(255,59,107,0.35);color:var(--red)}
+.toast.info{border-color:rgba(0,229,255,0.35);color:var(--cyan)}
+.toast.gold{border-color:rgba(245,197,24,0.35);color:var(--gold)}
+.toast.event{border-color:rgba(245,158,11,0.35);color:var(--event)}
+.toast.premium{border-color:rgba(244,114,182,0.35);color:var(--premium)}
+.toast.vip{border-color:rgba(255,215,0,0.35);color:var(--vip)}
+
+footer{background:var(--bg2);border-top:1px solid var(--border);padding:18px 24px;text-align:center;font-size:0.73rem;color:var(--muted)}
+footer span{color:var(--gold);font-weight:600}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+@media(max-width:700px){
+  .nav-tabs{display:none}.grid-3{grid-template-columns:1fr}.form-row{grid-template-columns:1fr}.premium-plans{grid-template-columns:1fr}
+  .hero h1{font-size:1.9rem}.diamond-hero h1{font-size:1.7rem}.profile-header{flex-direction:column;text-align:center}
+  .hiw-steps{flex-direction:column}.page{padding:18px 12px}.admin-table-wrap{font-size:0.78rem}
+}
+</style>
+</head>
+<body>
+<canvas id="bgCanvas"></canvas>
+<div class="app">
+
+<!-- NAV -->
+<nav>
+  <div class="logo"><div class="logo-icon">🪙</div>MC Coin</div>
+  <div class="nav-tabs" id="navTabs">
+    <button class="nav-tab active" onclick="showPage('shop')" id="tab-shop">🏪 Loja</button>
+    <button class="nav-tab" onclick="showPage('diamonds')" id="tab-diamonds">💎 Diamantes</button>
+    <button class="nav-tab premium-tab" onclick="showPage('premium')" id="tab-premium">👑 Premium</button>
+    <button class="nav-tab" onclick="showPage('inventory')" id="tab-inventory">🎒 Inventário</button>
+    <button class="nav-tab" onclick="showPage('profile')" id="tab-profile">👤 Perfil</button>
+    <button class="nav-tab admin-tab" onclick="showPage('admin')" id="tab-admin" style="display:none">⚙️ Admin</button>
+  </div>
+  <div class="nav-right">
+    <div class="bal-chip bal-diam" id="navDiamBal" style="display:none">💎 <span id="navDiamonds">0</span></div>
+    <div class="bal-chip bal-coin" id="navCoinBal" style="display:none">🪙 <span id="navCoins">0</span></div>
+    <button class="btn-login" onclick="openLogin()" id="btnLogin">Entrar</button>
+    <div class="avatar-btn" onclick="showPage('profile')" id="avatarBtn" style="display:none">?<span class="avatar-premium-badge" id="avatarPremiumBadge" style="display:none">💎</span></div>
+  </div>
+</nav>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- CONFIRM POPUP -->
+<div class="confirm-overlay" id="confirmOverlay">
+  <div class="confirm-box">
+    <span class="confirm-warning-icon">⚠️</span>
+    <div class="confirm-title">CERTEZA?</div>
+    <div class="confirm-desc" id="confirmDesc">Esta ação não pode ser desfeita.</div>
+    <div class="confirm-btns">
+      <button class="confirm-btn-cancel" onclick="confirmNo()">Cancelar</button>
+      <button class="confirm-btn-ok" onclick="confirmYes()">Sim, apagar</button>
+    </div>
+  </div>
+</div>
+
+<!-- PAGES -->
+
+<!-- SHOP -->
+<div class="page active" id="page-shop">
+  <div class="hero">
+    <div class="hero-badge">🪙 Moeda Oficial do Servidor</div>
+    <h1>MC Coin</h1>
+    <p>Compre pacotes de MC Coins com seus diamantes e aproveite benefícios exclusivos</p>
+  </div>
+  <div class="sec-title"><span class="sec-dot"></span>Pacotes Comuns</div>
+  <div class="grid-3" id="commonCoinsGrid"></div>
+  <div class="sec-title"><span class="sec-dot" style="background:var(--purple);box-shadow:0 0 8px var(--purple)"></span>Pacotes com Bônus</div>
+  <div class="grid-3" id="bonusCoinsGrid"></div>
+  <div id="vipShopSection"></div>
+  <div id="proShopSection"></div>
+</div>
+
+<!-- DIAMONDS -->
+<div class="page" id="page-diamonds">
+  <div class="diamond-hero">
+    <div class="hero-badge" style="background:rgba(0,229,255,0.06);border-color:rgba(0,229,255,0.2);color:var(--cyan)">💎 Moeda de Compra</div>
+    <h1>Diamantes</h1>
+    <p>Compre diamantes com dinheiro real e use-os para adquirir MC Coins</p>
+  </div>
+  <div class="security-notice">🔐 <span>Todas as compras de diamantes são protegidas por <b>KEY de segurança</b> fornecida pelo administrador.</span></div>
+  <div class="hiw-steps">
+    <div class="hiw-step"><div class="hiw-num" style="background:linear-gradient(135deg,var(--cyan),#0097a7);color:#000">1</div><strong>Solicite uma KEY</strong><p>Peça sua chave de compra ao admin do servidor</p></div>
+    <div class="hiw-step"><div class="hiw-num" style="background:linear-gradient(135deg,var(--gold),#b8860b);color:#000">2</div><strong>Insira a KEY</strong><p>Use a chave fornecida para confirmar sua compra</p></div>
+    <div class="hiw-step"><div class="hiw-num" style="background:linear-gradient(135deg,var(--purple),#7c3aed);color:#fff">3</div><strong>Aproveite!</strong><p>Troque seus diamantes por MC Coins na loja</p></div>
+  </div>
+  <div id="eventCombosSection" style="display:none">
+    <div class="event-banner">
+      <div class="event-banner-header">
+        <span class="event-icon-big">🎉</span>
+        <div>
+          <div style="display:flex;align-items:center;gap:8px">
+            <div class="event-banner-title">PACOTES EVENTO</div>
+            <div class="event-tag">🔥 Prioridade</div>
+          </div>
+          <div class="event-banner-sub">Pacotes especiais com diamantes + MC Coins combinados — ofertas limitadas!</div>
+        </div>
+      </div>
+      <div class="event-grid" id="eventCombosGrid"></div>
+    </div>
+  </div>
+  <div class="sec-title"><span class="sec-dot" style="background:var(--cyan);box-shadow:0 0 8px var(--cyan)"></span>Pacotes Comuns</div>
+  <div class="grid-3" id="commonDiamGrid"></div>
+  <div class="sec-title"><span class="sec-dot" style="background:var(--purple);box-shadow:0 0 8px var(--purple)"></span>Pacotes com Bônus</div>
+  <div class="grid-3" id="bonusDiamGrid"></div>
+</div>
+
+<!-- PREMIUM -->
+<div class="page" id="page-premium">
+  <div class="premium-hero">
+    <div class="hero-badge" style="background:rgba(244,114,182,0.08);border-color:rgba(244,114,182,0.25);color:var(--premium)">👑 Planos Exclusivos</div>
+    <h1>Premium</h1>
+    <p>Desbloqueie lojas exclusivas, recompensas automáticas e personalização total</p>
+  </div>
+  <div class="premium-plans" id="premiumPlansGrid"></div>
+  <div id="premiumActiveSection"></div>
+</div>
+
+<!-- INVENTORY -->
+<div class="page" id="page-inventory">
+  <div class="hero" style="padding:30px 0 24px">
+    <div class="hero-badge" style="background:rgba(0,229,255,0.06);border-color:rgba(0,229,255,0.2);color:var(--cyan)">🎒 Meus Itens</div>
+    <h1 style="font-size:2rem">Inventário</h1>
+    <p>Todos os itens que você adquiriu</p>
+  </div>
+  <div id="inventoryContent"></div>
+</div>
+
+<!-- PROFILE -->
+<div class="page" id="page-profile">
+  <div id="profileContent"></div>
+</div>
+
+<!-- ADMIN -->
+<div class="page" id="page-admin">
+  <div class="admin-header">
+    <span style="font-size:2rem">🛡️</span>
+    <div>
+      <div style="font-family:'Orbitron',sans-serif;font-size:1rem;font-weight:700;color:var(--admin)">Painel Administrativo</div>
+      <div style="font-size:0.78rem;color:var(--muted)">Gerencie produtos, keys, eventos, estoques e usuários</div>
+    </div>
+  </div>
+  <div class="admin-tabs">
+    <div class="admin-tab active" onclick="adminTab('coins')" id="atab-coins">🪙 MC Coins</div>
+    <div class="admin-tab" onclick="adminTab('diamonds')" id="atab-diamonds">💎 Diamantes</div>
+    <div class="admin-tab" onclick="adminTab('combos')" id="atab-combos">🎉 Pacotes Evento</div>
+    <div class="admin-tab" onclick="adminTab('keys')" id="atab-keys">🔑 Keys</div>
+    <div class="admin-tab" onclick="adminTab('users')" id="atab-users">👥 Usuários</div>
+  </div>
+
+  <div class="admin-section active" id="asec-coins">
+    <div class="admin-toolbar"><h3>Pacotes de MC Coins</h3><button class="btn-add" onclick="openAddProduct('coin')">+ Adicionar</button></div>
+    <div class="admin-table-wrap"><table>
+      <thead><tr><th>Pacote</th><th>Coins</th><th>Bônus</th><th>Custo💎</th><th>Stock</th><th>Desc%</th><th>Tipo</th><th>Status</th><th>Ações</th></tr></thead>
+      <tbody id="adminCoinsTable"></tbody>
+    </table></div>
+  </div>
+
+  <div class="admin-section" id="asec-diamonds">
+    <div class="admin-toolbar"><h3>Pacotes de Diamantes</h3><button class="btn-add" onclick="openAddProduct('diamond')">+ Adicionar</button></div>
+    <div class="admin-table-wrap"><table>
+      <thead><tr><th>Pacote</th><th>Diamantes</th><th>Bônus</th><th>Preço R$</th><th>Stock</th><th>Desc%</th><th>Status</th><th>Ações</th></tr></thead>
+      <tbody id="adminDiamondsTable"></tbody>
+    </table></div>
+  </div>
+
+  <div class="admin-section" id="asec-combos">
+    <div class="admin-toolbar"><h3>Pacotes Evento (Combo)</h3><button class="btn-add" onclick="openAddCombo()">+ Criar Evento</button></div>
+    <div style="background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.2);border-radius:10px;padding:12px 16px;margin-bottom:14px;font-size:0.8rem;color:var(--muted)">
+      💡 Pacotes evento combinam <b style="color:var(--cyan)">Diamantes</b> + <b style="color:var(--gold)">MC Coins</b> e aparecem no topo da página Diamantes.
+    </div>
+    <div class="admin-table-wrap"><table>
+      <thead><tr><th>Nome</th><th>💎 Diam.</th><th>🪙 Coins</th><th>Preço R$</th><th>Stock</th><th>Status</th><th>Ações</th></tr></thead>
+      <tbody id="adminCombosTable"></tbody>
+    </table></div>
+  </div>
+
+  <!-- KEYS MANAGEMENT -->
+  <div class="admin-section" id="asec-keys">
+    <div class="admin-toolbar">
+      <h3>🔑 Gerenciar Keys de Compra</h3>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn-add" onclick="genKey('diamond')">+ Key Diamante</button>
+        <button class="btn-add" style="background:linear-gradient(135deg,var(--premium),#ec4899)" onclick="genKey('premium_base')">+ Key Premium Base</button>
+        <button class="btn-add" style="background:linear-gradient(135deg,var(--pro),#7c3aed)" onclick="genKey('premium_pro')">+ Key Premium Pro</button>
+        <button class="btn-add" style="background:linear-gradient(135deg,var(--premium),#f97316)" onclick="genKey('premium_full')">+ Key Premium Full</button>
+      </div>
+    </div>
+    <div style="background:rgba(0,229,255,0.05);border:1px solid rgba(0,229,255,0.2);border-radius:10px;padding:12px 16px;margin-bottom:14px;font-size:0.8rem;color:var(--cyan)">
+      🔐 Keys são códigos únicos gerados pelo admin. Cada key pode ser usada apenas uma vez. Keys de diamante permitem comprar qualquer pacote de diamante. Keys Premium ativam os planos.
+    </div>
+    <div class="admin-table-wrap"><table>
+      <thead><tr><th>KEY</th><th>Tipo</th><th>Status</th><th>Usado por</th><th>Ações</th></tr></thead>
+      <tbody id="adminKeysTable"></tbody>
+    </table></div>
+  </div>
+
+  <div class="admin-section" id="asec-users">
+    <div class="admin-toolbar"><h3>Usuários Registrados</h3></div>
+    <div class="admin-table-wrap"><table>
+      <thead><tr><th>Usuário</th><th>Email</th><th>💎</th><th>🪙</th><th>Itens</th><th>Role</th><th>Premium</th><th>Inventário</th></tr></thead>
+      <tbody id="adminUsersTable"></tbody>
+    </table></div>
+  </div>
+</div>
+
+<!-- MODALS -->
+
+<!-- LOGIN -->
+<div class="modal-overlay" id="loginModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('loginModal')">✕</button>
+    <div class="modal-title">Entrar</div>
+    <div class="modal-sub">Acesse sua conta MC Coin</div>
+    <div class="msg-error" id="loginError"></div>
+    <div class="form-group"><label>Usuário</label><input class="form-input" id="loginUser" type="text" placeholder="Seu usuário" autocomplete="username"></div>
+    <div class="form-group"><label>Senha</label><input class="form-input" id="loginPass" type="password" placeholder="Sua senha" autocomplete="current-password"></div>
+    <button class="btn-primary" onclick="doLogin()">Entrar</button>
+    <div class="form-switch">Não tem conta? <a onclick="openRegister()">Criar conta</a></div>
+  </div>
+</div>
+
+<!-- REGISTER -->
+<div class="modal-overlay" id="registerModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('registerModal')">✕</button>
+    <div class="modal-title">Criar Conta</div>
+    <div class="modal-sub">Junte-se à comunidade MC Coin</div>
+    <div class="msg-error" id="regError"></div>
+    <div class="form-group"><label>Usuário</label><input class="form-input" id="regUser" type="text" placeholder="Escolha um usuário"></div>
+    <div class="form-group"><label>Email</label><input class="form-input" id="regEmail" type="email" placeholder="seu@email.com"></div>
+    <div class="form-row">
+      <div class="form-group"><label>Senha</label><input class="form-input" id="regPass" type="password" placeholder="Senha"></div>
+      <div class="form-group"><label>Confirmar</label><input class="form-input" id="regPass2" type="password" placeholder="Confirme"></div>
+    </div>
+    <button class="btn-primary" onclick="doRegister()">Criar Conta</button>
+    <div class="form-switch">Já tem conta? <a onclick="openLogin()">Entrar</a></div>
+  </div>
+</div>
+
+<!-- BUY COINS -->
+<div class="modal-overlay" id="buyModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('buyModal')">✕</button>
+    <div class="modal-title" id="buyModalTitle">Confirmar Compra</div>
+    <div class="modal-sub">Revise os detalhes antes de confirmar</div>
+    <div class="amount-big">
+      <div class="num" id="buyAmount">0</div>
+      <div class="label" id="buyAmountLabel">MC Coins</div>
+    </div>
+    <div class="cost-row"><span>Custo</span><span id="buyCost">—</span></div>
+    <div class="cost-row" id="buyBonusRow"><span>🎁 Bônus</span><span id="buyBonusVal" style="color:var(--purple)">—</span></div>
+    <div class="cost-row"><span>Seus Diamantes</span><span id="buyUserDiam">—</span></div>
+    <div class="cost-row"><span>Após a compra</span><span id="buyAfter">—</span></div>
+    <div class="pay-methods"><div class="pay-method selected"><div class="pm-icon">💎</div>Diamantes</div></div>
+    <div class="msg-error" id="buyError"></div>
+    <button class="btn-primary" onclick="confirmBuy()">Confirmar Compra</button>
+    <button class="btn-secondary" onclick="closeModal('buyModal')">Cancelar</button>
+  </div>
+</div>
+
+<!-- BUY DIAMONDS — with KEY security -->
+<div class="modal-overlay" id="buyDiamModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('buyDiamModal')">✕</button>
+    <div class="modal-title" id="buyDiamTitle" style="color:var(--cyan)">💎 Comprar Diamantes</div>
+    <div class="modal-sub">Insira sua KEY de compra para prosseguir</div>
+    <div class="amount-big" style="border-color:rgba(0,229,255,0.2)">
+      <div class="num" style="color:var(--cyan)" id="diamBuyAmount">0</div>
+      <div class="label" id="diamBuyLabel">💎 Diamantes</div>
+    </div>
+    <div class="cost-row"><span>Valor</span><span id="diamBuyPrice">R$ 0,00</span></div>
+    <div class="cost-row" id="diamBuyBonusRow"><span>🎁 Bônus</span><span style="color:var(--purple)" id="diamBuyBonusVal">—</span></div>
+    <div class="key-divider">🔐 Autenticação de Compra</div>
+    <div class="security-badge">🛡️ Esta compra requer uma KEY fornecida pelo administrador</div>
+    <div class="form-group">
+      <label>🔑 KEY de Compra</label>
+      <div class="key-input-wrap">
+        <input class="form-input key-input" id="diamKeyInput" type="text" placeholder="XXXX-XXXX-XXXX" maxlength="14" oninput="formatKey(this)">
+      </div>
+      <div class="key-hint">Solicite sua KEY ao admin do servidor</div>
+    </div>
+    <div style="font-size:0.74rem;color:var(--muted);margin:4px 0 4px;text-transform:uppercase;letter-spacing:0.06em">Forma de Pagamento</div>
+    <div class="pay-methods" id="diamPayMethods">
+      <div class="pay-method selected" onclick="selPayDiam(this,'pix')" data-method="pix"><div class="pm-icon">📱</div>Pix</div>
+      <div class="pay-method" onclick="selPayDiam(this,'credit')" data-method="credit"><div class="pm-icon">💳</div>Crédito</div>
+      <div class="pay-method" onclick="selPayDiam(this,'debit')" data-method="debit"><div class="pm-icon">🏦</div>Débito</div>
+    </div>
+    <div class="msg-error" id="diamBuyError"></div>
+    <button class="btn-primary" style="background:linear-gradient(135deg,var(--cyan),#0097a7);color:#000" onclick="confirmBuyDiam()">🔐 Validar KEY e Comprar</button>
+    <button class="btn-secondary" onclick="closeModal('buyDiamModal')">Cancelar</button>
+  </div>
+</div>
+
+<!-- BUY COMBO -->
+<div class="modal-overlay" id="buyComboModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('buyComboModal')">✕</button>
+    <div class="modal-title" style="color:var(--event)" id="buyComboTitle">Pacote Evento</div>
+    <div class="modal-sub">Combo especial: diamantes + MC Coins juntos!</div>
+    <div class="amount-big" style="border-color:rgba(245,158,11,0.3)">
+      <div style="display:flex;justify-content:center;gap:20px;align-items:center">
+        <div style="text-align:center"><div class="num" style="color:var(--cyan);font-size:1.8rem" id="comboBuyDiam">0</div><div class="label">💎 Diamantes</div></div>
+        <div style="font-size:1.5rem;color:var(--muted)">+</div>
+        <div style="text-align:center"><div class="num" style="color:var(--gold);font-size:1.8rem" id="comboBuyCoins">0</div><div class="label">🪙 MC Coins</div></div>
+      </div>
+    </div>
+    <div class="cost-row"><span>Valor</span><span id="comboBuyPrice" style="color:var(--green)">R$ 0,00</span></div>
+    <div class="key-divider">🔐 Autenticação de Compra</div>
+    <div class="security-badge">🛡️ Esta compra requer uma KEY fornecida pelo administrador</div>
+    <div class="form-group">
+      <label>🔑 KEY de Compra</label>
+      <input class="form-input key-input" id="comboKeyInput" type="text" placeholder="XXXX-XXXX-XXXX" maxlength="14" oninput="formatKey(this)">
+      <div class="key-hint">Solicite sua KEY ao admin do servidor</div>
+    </div>
+    <div style="font-size:0.74rem;color:var(--muted);margin:4px 0 4px;text-transform:uppercase;letter-spacing:0.06em">Forma de Pagamento</div>
+    <div class="pay-methods" id="comboPayMethods">
+      <div class="pay-method selected" onclick="selPayCombo(this,'pix')" data-method="pix"><div class="pm-icon">📱</div>Pix</div>
+      <div class="pay-method" onclick="selPayCombo(this,'credit')" data-method="credit"><div class="pm-icon">💳</div>Crédito</div>
+      <div class="pay-method" onclick="selPayCombo(this,'debit')" data-method="debit"><div class="pm-icon">🏦</div>Débito</div>
+    </div>
+    <div class="msg-error" id="comboBuyError"></div>
+    <button class="btn-primary" style="background:linear-gradient(135deg,var(--event),#b45309);color:#000" onclick="confirmBuyCombo()">🔐 Validar KEY e Garantir</button>
+    <button class="btn-secondary" onclick="closeModal('buyComboModal')">Cancelar</button>
+  </div>
+</div>
+
+<!-- ACTIVATE PREMIUM -->
+<div class="modal-overlay" id="premiumKeyModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('premiumKeyModal')">✕</button>
+    <div class="modal-title" style="color:var(--premium)" id="premKeyTitle">👑 Ativar Premium</div>
+    <div class="modal-sub" id="premKeyDesc">Insira a KEY fornecida pelo administrador</div>
+    <div class="amount-big" style="border-color:rgba(244,114,182,0.3);background:rgba(244,114,182,0.04)">
+      <div class="num" style="font-size:1.5rem" id="premKeyPlanIcon">👑</div>
+      <div class="label" id="premKeyPlanName">Plano Premium</div>
+    </div>
+    <div class="security-badge" style="background:rgba(244,114,182,0.06);border-color:rgba(244,114,182,0.2);color:var(--premium)">🛡️ A ativação requer KEY de admin específica para este plano</div>
+    <div class="form-group">
+      <label>🔑 KEY de Ativação</label>
+      <input class="form-input key-input" id="premiumKeyInput" type="text" placeholder="XXXX-XXXX-XXXX" maxlength="14" oninput="formatKey(this)">
+      <div class="key-hint">Solicite sua KEY Premium ao admin do servidor</div>
+    </div>
+    <div class="msg-error" id="premKeyError"></div>
+    <button class="btn-primary" style="background:linear-gradient(135deg,var(--premium),#ec4899);color:#fff" onclick="confirmActivatePremium()">✨ Ativar Premium</button>
+    <button class="btn-secondary" onclick="closeModal('premiumKeyModal')">Cancelar</button>
+    <input type="hidden" id="premKeyPlanType">
+  </div>
+</div>
+
+<!-- INVENTORY DETAIL -->
+<div class="modal-overlay" id="invModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('invModal')">✕</button>
+    <div class="inv-modal-header">
+      <div class="inv-modal-icon" id="invModalIcon">🪙</div>
+      <div class="inv-modal-name" id="invModalName">Pacote</div>
+    </div>
+    <div class="inv-details-grid">
+      <div class="inv-detail"><div class="inv-detail-label">💰 Valor Pago</div><div class="inv-detail-val" style="color:var(--gold)" id="invDetailCost">—</div></div>
+      <div class="inv-detail"><div class="inv-detail-label">💳 Forma de Pag.</div><div class="inv-detail-val" style="color:var(--cyan)" id="invDetailPay">—</div></div>
+      <div class="inv-detail"><div class="inv-detail-label">📦 Quantidade</div><div class="inv-detail-val" style="color:var(--gold)" id="invDetailAmt">—</div></div>
+      <div class="inv-detail"><div class="inv-detail-label">📅 Data</div><div class="inv-detail-val" id="invDetailDate">—</div></div>
+    </div>
+    <div class="inv-footer-row">
+      <div><div class="inv-detail-label">🎁 Bônus</div><div class="inv-detail-val" style="color:var(--purple)" id="invDetailBonus">—</div></div>
+      <div style="text-align:right"><div class="inv-detail-label">🆔 ID do Produto</div><div class="inv-detail-val" style="font-size:0.7rem;font-family:'Orbitron',sans-serif" id="invDetailId">—</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ADD/EDIT PRODUCT -->
+<div class="modal-overlay" id="productModal">
+  <div class="modal modal-wide">
+    <button class="modal-close" onclick="closeModal('productModal')">✕</button>
+    <div class="modal-title" id="prodModalTitle">Adicionar Pacote</div>
+    <div class="modal-sub" id="prodModalSub">Configure os detalhes do pacote</div>
+    <div class="msg-error" id="prodError"></div>
+    <input type="hidden" id="prodEditId">
+    <input type="hidden" id="prodEditType">
+    <div class="form-row">
+      <div class="form-group"><label>Nome</label><input class="form-input" id="prodName" placeholder="ex: Pacote Prata"></div>
+      <div class="form-group"><label>Emoji / Ícone</label><input class="form-input" id="prodIcon" placeholder="🪙" value="🪙"></div>
+    </div>
+    <div class="form-group"><label>Descrição</label><input class="form-input" id="prodDesc" placeholder="Breve descrição do pacote"></div>
+    <div class="form-row">
+      <div class="form-group"><label id="prodAmtLabel">Quantidade (MC Coins)</label><input class="form-input" id="prodAmount" type="number" placeholder="ex: 100" min="1"></div>
+      <div class="form-group"><label>Bônus (0 = sem bônus)</label><input class="form-input" id="prodBonus" type="number" placeholder="0" value="0" min="0"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label id="prodCostLabel">Custo em Diamantes</label><input class="form-input" id="prodCost" type="number" step="0.01" placeholder="ex: 50" min="0"></div>
+      <div class="form-group"><label>Desconto % (0 = sem)</label><input class="form-input" id="prodDiscount" type="number" placeholder="0" value="0" min="0" max="100"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Stock (vazio = ilimitado)</label><input class="form-input" id="prodStock" type="number" placeholder="ex: 50" min="0"></div>
+      <div class="form-group">
+        <label>Tipo de Loja</label>
+        <select class="form-input" id="prodShopType">
+          <option value="common">Loja Comum</option>
+          <option value="vip">🥇 Loja VIP (Plano Base+)</option>
+          <option value="pro">💜 Loja Pro (Plano Pro+)</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group" style="display:flex;flex-direction:column;justify-content:flex-end;gap:10px;padding-bottom:2px">
+        <label class="form-check"><input type="checkbox" id="prodFree"> Grátis</label>
+        <label class="form-check"><input type="checkbox" id="prodFeatured"> Destaque ⭐</label>
+      </div>
+    </div>
+    <button class="btn-primary" onclick="saveProduct()">💾 Salvar Pacote</button>
+  </div>
+</div>
+
+<!-- ADD/EDIT COMBO -->
+<div class="modal-overlay" id="comboModal">
+  <div class="modal modal-wide">
+    <button class="modal-close" onclick="closeModal('comboModal')">✕</button>
+    <div class="modal-title" id="comboModalTitle" style="color:var(--event)">🎉 Criar Pacote Evento</div>
+    <div class="modal-sub">Combine diamantes + MC Coins em um pacote especial de destaque</div>
+    <div class="msg-error" id="comboError"></div>
+    <input type="hidden" id="comboEditId">
+    <div class="form-row">
+      <div class="form-group"><label>Nome do Evento</label><input class="form-input" id="comboName" placeholder="ex: Mega Combo Semanal"></div>
+      <div class="form-group"><label>Emoji / Ícone</label><input class="form-input" id="comboIcon" placeholder="🎉" value="🎉"></div>
+    </div>
+    <div class="form-group"><label>Descrição</label><input class="form-input" id="comboDesc" placeholder="Descrição do evento"></div>
+    <div class="form-row">
+      <div class="form-group"><label>💎 Quantidade de Diamantes</label><input class="form-input" id="comboDiamAmt" type="number" placeholder="ex: 150" min="1"></div>
+      <div class="form-group"><label>🪙 Quantidade de MC Coins</label><input class="form-input" id="comboCoinAmt" type="number" placeholder="ex: 500" min="1"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Preço em R$</label><input class="form-input" id="comboPrice" type="number" step="0.01" placeholder="ex: 9.99" min="0"></div>
+      <div class="form-group"><label>Stock (vazio = ilimitado)</label><input class="form-input" id="comboStock" type="number" placeholder="ex: 30" min="0"></div>
+    </div>
+    <button class="btn-primary" style="background:linear-gradient(135deg,var(--event),#b45309);color:#000" onclick="saveCombo()">🎉 Salvar Pacote Evento</button>
+  </div>
+</div>
+
+<!-- ADMIN INVENTORY -->
+<div class="modal-overlay" id="adminInvModal">
+  <div class="modal modal-wide">
+    <button class="modal-close" onclick="closeModal('adminInvModal')">✕</button>
+    <div class="modal-title">🎒 Editar Inventário</div>
+    <div class="modal-sub" id="adminInvSub">Gerenciar itens do usuário</div>
+    <input type="hidden" id="adminInvUserId">
+    <div style="margin-bottom:18px">
+      <div style="font-size:0.75rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:10px">Adicionar Item</div>
+      <div class="form-row">
+        <div class="form-group"><label>Tipo</label>
+          <select class="form-input" id="adminInvType">
+            <option value="coin">🪙 MC Coins</option>
+            <option value="diamond">💎 Diamantes</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Quantidade</label><input class="form-input" id="adminInvAmt" type="number" placeholder="ex: 100" min="1"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Bônus</label><input class="form-input" id="adminInvBonus" type="number" placeholder="0" value="0" min="0"></div>
+        <div class="form-group"><label>Forma de Pagamento</label>
+          <select class="form-input" id="adminInvPay">
+            <option value="Admin 🛡️">Admin 🛡️</option>
+            <option value="Pix 📱">Pix 📱</option>
+            <option value="Cartão 💳">Cartão 💳</option>
+          </select>
+        </div>
+      </div>
+      <button class="btn-save" onclick="adminAddInvItem()">+ Adicionar Item</button>
+    </div>
+    <div style="font-size:0.75rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:10px">Itens Atuais</div>
+    <div id="adminInvList" style="max-height:280px;overflow-y:auto"></div>
+  </div>
+</div>
+
+</div><!-- app -->
+
+<footer><span>MC Coin</span> — Loja Oficial de Moedas · Sistema Premium & Keys · © 2025</footer>
+
+<script>
+// ============================================================
+//  STATE
+// ============================================================
+let S={
+  users: JSON.parse(localStorage.getItem('mc_users')||'null')||[
+    {id:'admin-001',username:'CEO',email:'ceo@mccoin.com',password:'123admin',isAdmin:true,diamonds:9999,mcCoins:0,inventory:[],premium:null,premiumTheme:'default',premiumFont:'exo',lastDailyReward:null}
+  ],
+  currentUser: null,
+  coinPackages: JSON.parse(localStorage.getItem('mc_coins')||'null')||[
+    {id:'cp-001',name:'Pacote Básico',desc:'Ideal para começar',amount:10,bonus:0,cost:5,discount:0,free:false,featured:false,stock:null,icon:'🪙',type:'coin',shopType:'common'},
+    {id:'cp-002',name:'Pacote Bronze',desc:'Para jogadores em crescimento',amount:50,bonus:0,cost:20,discount:0,free:false,featured:false,stock:null,icon:'🥉',type:'coin',shopType:'common'},
+    {id:'cp-003',name:'Pacote Prata',desc:'Ótimo custo-benefício',amount:150,bonus:0,cost:50,discount:0,free:false,featured:false,stock:null,icon:'🥈',type:'coin',shopType:'common'},
+    {id:'cp-004',name:'Pacote Ouro',desc:'Bônus exclusivo para aventureiros',amount:250,bonus:30,cost:80,discount:0,free:false,featured:false,stock:null,icon:'🥇',type:'coin',shopType:'common'},
+    {id:'cp-005',name:'Pacote Platina',desc:'Para os mais dedicados',amount:350,bonus:50,cost:100,discount:0,free:false,featured:false,stock:null,icon:'💠',type:'coin',shopType:'common'},
+    {id:'cp-006',name:'Pacote Diamante',desc:'O melhor da loja, máximo bônus',amount:500,bonus:100,cost:150,discount:0,free:false,featured:true,stock:30,icon:'💎',type:'coin',shopType:'common'},
+    // VIP
+    {id:'cp-v01',name:'VIP Starter',desc:'Exclusivo membros VIP',amount:120,bonus:0,cost:30,discount:0,free:false,featured:false,stock:null,icon:'⭐',type:'coin',shopType:'vip'},
+    {id:'cp-v02',name:'VIP Silver',desc:'Pacote prata exclusivo VIP',amount:200,bonus:15,cost:55,discount:0,free:false,featured:false,stock:null,icon:'🌟',type:'coin',shopType:'vip'},
+    {id:'cp-v03',name:'VIP Gold',desc:'Ouro puro para membros VIP',amount:300,bonus:25,cost:85,discount:0,free:false,featured:false,stock:null,icon:'🏅',type:'coin',shopType:'vip'},
+    {id:'cp-v04',name:'VIP Platinum',desc:'Máximo custo-benefício VIP',amount:400,bonus:40,cost:110,discount:0,free:false,featured:false,stock:null,icon:'💛',type:'coin',shopType:'vip'},
+    {id:'cp-v05',name:'VIP Diamond',desc:'Elite VIP com mega bônus',amount:550,bonus:80,cost:140,discount:0,free:false,featured:false,stock:null,icon:'🔶',type:'coin',shopType:'vip'},
+    {id:'cp-v06',name:'VIP Crown',desc:'A coroa da loja VIP',amount:650,bonus:100,cost:160,discount:0,free:false,featured:false,stock:null,icon:'👑',type:'coin',shopType:'vip'},
+    {id:'cp-v07',name:'VIP Legendary',desc:'Lendário — máximo absoluto VIP',amount:700,bonus:120,cost:180,discount:0,free:false,featured:true,stock:20,icon:'🔥',type:'coin',shopType:'vip'},
+    {id:'cp-v08',name:'VIP Infinity',desc:'Infinito para os verdadeiros VIPs',amount:690,bonus:110,cost:175,discount:0,free:false,featured:false,stock:null,icon:'♾️',type:'coin',shopType:'vip'},
+    // PRO Coins
+    {id:'cp-p01',name:'Pro Starter',desc:'Exclusivo Plano Pro+',amount:130,bonus:0,cost:28,discount:0,free:false,featured:false,stock:null,icon:'💜',type:'coin',shopType:'pro'},
+    {id:'cp-p02',name:'Pro Silver',desc:'Prata exclusivo Pro',amount:220,bonus:20,cost:58,discount:0,free:false,featured:false,stock:null,icon:'🎯',type:'coin',shopType:'pro'},
+    {id:'cp-p03',name:'Pro Gold',desc:'Ouro exclusivo Pro',amount:320,bonus:35,cost:88,discount:0,free:false,featured:false,stock:null,icon:'🔮',type:'coin',shopType:'pro'},
+    {id:'cp-p04',name:'Pro Platinum',desc:'Platina exclusiva Pro',amount:450,bonus:60,cost:115,discount:0,free:false,featured:false,stock:null,icon:'🌀',type:'coin',shopType:'pro'},
+    {id:'cp-p05',name:'Pro Diamond',desc:'Elite Pro Diamond',amount:580,bonus:90,cost:145,discount:0,free:false,featured:false,stock:null,icon:'🧬',type:'coin',shopType:'pro'},
+    {id:'cp-p06',name:'Pro Mythic',desc:'Mítico exclusivo Pro',amount:680,bonus:115,cost:165,discount:0,free:false,featured:false,stock:null,icon:'🦋',type:'coin',shopType:'pro'},
+    {id:'cp-p07',name:'Pro Legend',desc:'Lendário Pro com bônus máximo',amount:700,bonus:130,cost:182,discount:0,free:false,featured:true,stock:15,icon:'⚡',type:'coin',shopType:'pro'},
+    {id:'cp-p08',name:'Pro Apex',desc:'Apex — o topo absoluto Pro',amount:695,bonus:125,cost:178,discount:0,free:false,featured:false,stock:null,icon:'🎪',type:'coin',shopType:'pro'},
+  ],
+  diamondPackages: JSON.parse(localStorage.getItem('mc_diamonds')||'null')||[
+    {id:'dp-001',name:'Faísca',desc:'Pequeno começo, grande jornada',amount:10,bonus:0,cost:0.10,discount:0,free:false,featured:false,stock:null,icon:'✨',type:'diamond'},
+    {id:'dp-002',name:'Brilho',desc:'Pacote intermediário acessível',amount:60,bonus:0,cost:0.70,discount:0,free:false,featured:false,stock:null,icon:'🔷',type:'diamond'},
+    {id:'dp-003',name:'Cristal',desc:'Valor sólido para jogadores ativos',amount:110,bonus:0,cost:1.50,discount:0,free:false,featured:false,stock:null,icon:'💠',type:'diamond'},
+    {id:'dp-004',name:'Safira',desc:'Com bônus especial de recompensa',amount:120,bonus:20,cost:1.80,discount:0,free:false,featured:false,stock:null,icon:'🫐',type:'diamond'},
+    {id:'dp-005',name:'Rubi',desc:'Bônus premium para os dedicados',amount:135,bonus:25,cost:2.20,discount:0,free:false,featured:false,stock:null,icon:'❤️',type:'diamond'},
+    {id:'dp-006',name:'Diamante Puro',desc:'Máximo — 150 diamantes + mega bônus',amount:150,bonus:40,cost:2.50,discount:0,free:false,featured:true,stock:null,icon:'💎',type:'diamond'},
+    // PRO Diamond packages
+    {id:'dp-p01',name:'Pro Diamond Base',desc:'Exclusivo Plano Pro+',amount:100,bonus:15,cost:1.20,discount:0,free:false,featured:false,stock:null,icon:'🔵',type:'diamond',shopType:'pro'},
+    {id:'dp-p02',name:'Pro Diamond Elite',desc:'Elite Pro Diamond',amount:200,bonus:35,cost:2.00,discount:0,free:false,featured:false,stock:null,icon:'🟣',type:'diamond',shopType:'pro'},
+    {id:'dp-p03',name:'Pro Diamond Max',desc:'Máximo absoluto Pro',amount:350,bonus:60,cost:3.50,discount:0,free:false,featured:true,stock:null,icon:'🟡',type:'diamond',shopType:'pro'},
+    {id:'dp-p04',name:'Pro Diamond Apex',desc:'Apex — máximo Diamantes Pro',amount:300,bonus:50,cost:2.80,discount:0,free:false,featured:false,stock:null,icon:'🔴',type:'diamond',shopType:'pro'},
+    {id:'dp-p05',name:'Pro Crystal Max',desc:'Cristal máximo Pro',amount:250,bonus:40,cost:2.30,discount:0,free:false,featured:false,stock:null,icon:'🩵',type:'diamond',shopType:'pro'},
+    {id:'dp-p06',name:'Pro Sapphire',desc:'Safira Pro exclusiva',amount:180,bonus:30,cost:1.70,discount:0,free:false,featured:false,stock:null,icon:'💙',type:'diamond',shopType:'pro'},
+    {id:'dp-p07',name:'Pro Ruby Max',desc:'Rubi máximo Pro',amount:220,bonus:38,cost:2.10,discount:0,free:false,featured:false,stock:null,icon:'❤️‍🔥',type:'diamond',shopType:'pro'},
+    {id:'dp-p08',name:'Pro Diamond King',desc:'O rei dos diamantes Pro',amount:320,bonus:55,cost:3.00,discount:0,free:false,featured:true,stock:10,icon:'👑',type:'diamond',shopType:'pro'},
+  ],
+  comboPacks: JSON.parse(localStorage.getItem('mc_combos')||'null')||[
+    {id:'cb-001',name:'Pacote Fundador',desc:'Combo exclusivo de lançamento!',diamondAmt:150,coinAmt:500,cost:9.99,stock:20,stockUsed:0,icon:'🎉',type:'combo'},
+  ],
+  keys: JSON.parse(localStorage.getItem('mc_keys')||'null')||[],
+  activeBuyProd: null,
+  activeBuyType: null,
+  payDiamBuy:'pix',
+  payComboBuy:'pix',
+  activePremPlan: null,
+  confirmCb: null,
+};
+
+function save(){
+  localStorage.setItem('mc_users',JSON.stringify(S.users));
+  localStorage.setItem('mc_coins',JSON.stringify(S.coinPackages));
+  localStorage.setItem('mc_diamonds',JSON.stringify(S.diamondPackages));
+  localStorage.setItem('mc_combos',JSON.stringify(S.comboPacks));
+  localStorage.setItem('mc_keys',JSON.stringify(S.keys));
+}
+
+// Restore session
+(()=>{
+  const sid=localStorage.getItem('mc_session');
+  if(sid){const u=S.users.find(x=>x.id===sid);if(u){S.currentUser=u;updateNav();applyUserTheme(u);}}
+})();
+
+// ============================================================
+//  PREMIUM HELPERS
+// ============================================================
+const PREMIUM_LEVELS={'base':1,'pro':2,'full':3};
+function userPremLevel(u){
+  if(!u||!u.premium)return 0;
+  return PREMIUM_LEVELS[u.premium]||0;
+}
+function hasPrem(level){
+  const u=S.currentUser;if(!u)return false;
+  return userPremLevel(u)>=level;
+}
+
+// Check / give daily reward for premium_full
+function checkDailyReward(){
+  const u=S.currentUser;
+  if(!u||u.premium!=='full')return;
+  const now=Date.now();
+  const week=7*24*60*60*1000;
+  const last=u.lastDailyReward||0;
+  if(now-last>=week){
+    u.diamonds+=100;
+    u.mcCoins+=300;
+    u.lastDailyReward=now;
+    const item={id:'inv-'+Date.now(),productId:'premium-reward',productName:'Recompensa Premium Semanal',type:'combo',amount:100,bonus:300,
+      cost:0,costUnit:'grátis',payMethod:'Premium 👑',date:new Date().toLocaleDateString('pt-BR'),icon:'👑'};
+    u.inventory.push(item);
+    save();refreshBal();
+    toast('🎁 Recompensa semanal Premium: +100💎 +300🪙!','premium',6000);
+  }
+}
+
+// ============================================================
+//  THEME
+// ============================================================
+function applyUserTheme(u){
+  if(!u){document.body.className='';return;}
+  document.body.className='';
+  if(u.premium&&u.premiumTheme&&u.premiumTheme!=='default'){
+    document.body.classList.add('theme-'+u.premiumTheme);
+  }
+  if(u.premium==='full'&&u.premiumFont){
+    document.body.classList.add('font-'+u.premiumFont);
+  }
+  // update avatar border
+  const ab=document.getElementById('avatarBtn');
+  if(ab){
+    const colors={base:'var(--vip)',pro:'var(--pro)',full:'var(--premium)'};
+    ab.style.borderColor=u.premium?(colors[u.premium]||'var(--gold)'):'var(--gold)';
+  }
+}
+
+// ============================================================
+//  NAV
+// ============================================================
+function showPage(name){
+  if(['profile','inventory','admin'].includes(name)&&!S.currentUser){openLogin();return;}
+  if(name==='admin'&&(!S.currentUser||!S.currentUser.isAdmin))return;
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  const pg=document.getElementById('page-'+name);
+  const tb=document.getElementById('tab-'+name);
+  if(pg) pg.classList.add('active');
+  if(tb) tb.classList.add('active');
+  if(name==='shop') renderShop();
+  if(name==='diamonds') renderDiamonds();
+  if(name==='premium') renderPremium();
+  if(name==='inventory') renderInventory();
+  if(name==='profile') renderProfile();
+  if(name==='admin') renderAdmin();
+  if(name==='shop'||name==='premium') checkDailyReward();
+}
+
+function updateNav(){
+  const u=S.currentUser;
+  if(u){
+    document.getElementById('btnLogin').style.display='none';
+    document.getElementById('avatarBtn').style.display='flex';
+    document.getElementById('avatarBtn').textContent=u.username[0].toUpperCase();
+    document.getElementById('navDiamBal').style.display='flex';
+    document.getElementById('navCoinBal').style.display='flex';
+    document.getElementById('navDiamonds').textContent=u.diamonds;
+    document.getElementById('navCoins').textContent=u.mcCoins;
+    document.getElementById('tab-admin').style.display=u.isAdmin?'flex':'none';
+    // premium badge
+    const pb=document.getElementById('avatarPremiumBadge');
+    if(pb) pb.style.display=u.premium==='full'?'flex':'none';
+  } else {
+    document.getElementById('btnLogin').style.display='';
+    document.getElementById('avatarBtn').style.display='none';
+    document.getElementById('navDiamBal').style.display='none';
+    document.getElementById('navCoinBal').style.display='none';
+    document.getElementById('tab-admin').style.display='none';
+    const pb=document.getElementById('avatarPremiumBadge');
+    if(pb) pb.style.display='none';
+  }
+}
+function refreshBal(){
+  if(!S.currentUser)return;
+  document.getElementById('navDiamonds').textContent=S.currentUser.diamonds;
+  document.getElementById('navCoins').textContent=S.currentUser.mcCoins;
+}
+
+// ============================================================
+//  AUTH
+// ============================================================
+function openLogin(){closeModal('registerModal');clearForm('loginError','loginUser','loginPass');openModal('loginModal');}
+function openRegister(){closeModal('loginModal');clearForm('regError','regUser','regEmail','regPass','regPass2');openModal('registerModal');}
+function clearForm(errId,...ids){
+  document.getElementById(errId).classList.remove('show');
+  ids.forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+}
+function doLogin(){
+  const user=document.getElementById('loginUser').value.trim();
+  const pass=document.getElementById('loginPass').value;
+  const err=document.getElementById('loginError');
+  if(!user||!pass){showErr(err,'Preencha todos os campos');return;}
+  const found=S.users.find(u=>u.username.toLowerCase()===user.toLowerCase()&&u.password===pass);
+  if(!found){showErr(err,'Usuário ou senha incorretos');return;}
+  S.currentUser=found;
+  localStorage.setItem('mc_session',found.id);
+  closeModal('loginModal');updateNav();applyUserTheme(found);
+  toast(`Bem-vindo de volta, ${found.username}! 👋`,'gold');
+  showPage('shop');checkDailyReward();
+}
+function doRegister(){
+  const user=document.getElementById('regUser').value.trim();
+  const email=document.getElementById('regEmail').value.trim();
+  const pass=document.getElementById('regPass').value;
+  const pass2=document.getElementById('regPass2').value;
+  const err=document.getElementById('regError');
+  if(!user||!email||!pass||!pass2){showErr(err,'Preencha todos os campos');return;}
+  if(pass!==pass2){showErr(err,'As senhas não coincidem');return;}
+  if(pass.length<4){showErr(err,'Senha mínima: 4 caracteres');return;}
+  if(S.users.find(u=>u.username.toLowerCase()===user.toLowerCase())){showErr(err,'Usuário já existe');return;}
+  const u={id:'u-'+Date.now(),username:user,email,password:pass,isAdmin:false,diamonds:0,mcCoins:0,inventory:[],premium:null,premiumTheme:'default',premiumFont:'exo',lastDailyReward:null};
+  S.users.push(u);save();S.currentUser=u;localStorage.setItem('mc_session',u.id);
+  closeModal('registerModal');updateNav();
+  toast(`Conta criada! Bem-vindo, ${user}! 🎉`,'success');showPage('shop');
+}
+function logout(){
+  S.currentUser=null;localStorage.removeItem('mc_session');
+  document.body.className='';
+  updateNav();showPage('shop');toast('Você saiu da conta','info');
+}
+
+// ============================================================
+//  STATUS HELPERS
+// ============================================================
+function getStatus(p){
+  if(p.stock!==null&&p.stock!==undefined&&p.stock<=0) return 'esgotado';
+  if(p.free) return 'free';
+  if(p.discount>0) return 'promo';
+  if(p.featured) return 'destaque';
+  return 'normal';
+}
+function statusTag(p){
+  const s=getStatus(p);
+  const map={
+    esgotado:'<span class="tag tag-esgotado">⛔ Esgotado</span>',
+    free:'<span class="tag tag-free">✅ Grátis</span>',
+    promo:`<span class="tag tag-sale">🔥 -${p.discount}%</span>`,
+    destaque:'<span class="tag tag-destaque">⭐ Destaque</span>',
+    normal:'<span class="tag tag-none">Normal</span>',
+  };
+  return map[s]||map.normal;
+}
+function effectiveCost(p){
+  if(p.free)return 0;
+  if(p.discount>0)return +(p.cost*(1-p.discount/100)).toFixed(2);
+  return p.cost;
+}
+function isEsgotado(p){return p.stock!==null&&p.stock!==undefined&&p.stock<=0;}
+
+// ============================================================
+//  KEY SYSTEM
+// ============================================================
+function genKeyStr(){
+  const chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let k='';for(let i=0;i<12;i++){if(i===4||i===8)k+='-';k+=chars[Math.floor(Math.random()*chars.length)];}
+  return k;
+}
+function genKey(type){
+  const k={id:'key-'+Date.now(),key:genKeyStr(),type,used:false,usedBy:null,createdAt:new Date().toLocaleDateString('pt-BR')};
+  S.keys.push(k);save();renderAdminKeys();
+  toast(`Key criada: ${k.key}`,'info',6000);
+}
+function validateKey(inputVal,expectedType){
+  const v=inputVal.trim().toUpperCase();
+  const k=S.keys.find(k=>k.key===v&&k.type===expectedType&&!k.used);
+  return k||null;
+}
+function useKey(keyObj,userId){
+  keyObj.used=true;
+  keyObj.usedBy=userId;
+  save();
+}
+function formatKey(el){
+  let v=el.value.replace(/[^A-Za-z0-9]/g,'').toUpperCase();
+  if(v.length>4) v=v.slice(0,4)+'-'+v.slice(4);
+  if(v.length>9) v=v.slice(0,9)+'-'+v.slice(9);
+  el.value=v.slice(0,14);
+}
+
+// ============================================================
+//  SHOP - COINS
+// ============================================================
+function renderShop(){
+  const common=S.coinPackages.filter(p=>(!p.shopType||p.shopType==='common')&&(!p.bonus||p.bonus===0));
+  const bonus=S.coinPackages.filter(p=>(!p.shopType||p.shopType==='common')&&p.bonus&&p.bonus>0);
+  document.getElementById('commonCoinsGrid').innerHTML=common.map(p=>coinCard(p,'common')).join('')||emptyMsg();
+  document.getElementById('bonusCoinsGrid').innerHTML=bonus.map(p=>coinCard(p,'common')).join('')||emptyMsg();
+  renderVipShop();
+  renderProShopCoins();
+}
+
+function emptyMsg(){return '<div style="color:var(--muted);font-size:0.85rem;padding:10px">Nenhum pacote disponível.</div>';}
+
+function renderVipShop(){
+  const el=document.getElementById('vipShopSection');if(!el)return;
+  const vipPacks=S.coinPackages.filter(p=>p.shopType==='vip');
+  const unlocked=hasPrem(1);
+  let html=`<div class="sec-title" style="margin-top:8px"><span class="sec-dot" style="background:var(--vip);box-shadow:0 0 8px var(--vip)"></span>Loja VIP 🥇 <span style="font-size:0.7rem;color:var(--muted);margin-left:4px">(Plano Base+)</span></div>`;
+  if(!unlocked){
+    html+=`<div class="locked-section" style="text-align:center;margin-bottom:24px">
+      <div style="font-size:3rem;margin-bottom:12px">🔒</div>
+      <h3 style="font-family:'Orbitron',sans-serif;font-size:0.9rem;color:var(--muted);margin-bottom:6px">Loja VIP Bloqueada</h3>
+      <p style="font-size:0.8rem;color:var(--muted);margin-bottom:12px">Ative o Plano Base ou superior para acessar 8 pacotes exclusivos VIP</p>
+      <button class="btn-buy vip-buy" onclick="showPage('premium')" style="padding:8px 18px">👑 Ver Planos Premium</button>
+    </div>`;
+  } else {
+    html+=`<div class="vip-banner"><div style="display:flex;align-items:center;gap:10px;margin-bottom:14px"><span style="font-size:1.6rem">👑</span><div><div style="font-family:'Orbitron',sans-serif;font-size:0.88rem;font-weight:700;color:var(--vip)">LOJA VIP DESBLOQUEADA</div><div style="font-size:0.75rem;color:var(--muted)">Pacotes exclusivos para membros VIP</div></div></div>`;
+    html+=`<div class="grid-3">${vipPacks.map(p=>coinCard(p,'vip')).join('')}</div></div>`;
+  }
+  el.innerHTML=html;
+}
+
+function renderProShopCoins(){
+  const el=document.getElementById('proShopSection');if(!el)return;
+  const proPacks=S.coinPackages.filter(p=>p.shopType==='pro');
+  const unlocked=hasPrem(2);
+  let html=`<div class="sec-title" style="margin-top:8px"><span class="sec-dot" style="background:var(--pro);box-shadow:0 0 8px var(--pro)"></span>Loja Pro 💜 <span style="font-size:0.7rem;color:var(--muted);margin-left:4px">(Plano Pro+)</span></div>`;
+  if(!unlocked){
+    html+=`<div class="locked-section" style="margin-bottom:24px">
+      <div style="font-size:3rem;margin-bottom:12px">🔒</div>
+      <h3 style="font-family:'Orbitron',sans-serif;font-size:0.9rem;color:var(--muted);margin-bottom:6px">Loja Pro Bloqueada</h3>
+      <p style="font-size:0.8rem;color:var(--muted);margin-bottom:12px">Ative o Plano Pro ou superior para acessar 8 pacotes exclusivos Pro</p>
+      <button class="btn-buy pro-buy" onclick="showPage('premium')" style="padding:8px 18px">👑 Ver Planos Premium</button>
+    </div>`;
+  } else {
+    html+=`<div class="pro-banner"><div style="display:flex;align-items:center;gap:10px;margin-bottom:14px"><span style="font-size:1.6rem">💜</span><div><div style="font-family:'Orbitron',sans-serif;font-size:0.88rem;font-weight:700;color:var(--pro)">LOJA PRO DESBLOQUEADA</div><div style="font-size:0.75rem;color:var(--muted)">Pacotes exclusivos MC Coins para membros Pro</div></div></div>`;
+    html+=`<div class="grid-3">${proPacks.map(p=>coinCard(p,'pro')).join('')}</div></div>`;
+  }
+  el.innerHTML=html;
+}
+
+function coinCard(p,tier='common'){
+  const eff=effectiveCost(p);
+  const out=isEsgotado(p);
+  const isB=p.bonus>0;
+  let cardCls=`prod-card${isB?' bonus':''}${out?' esgotado':''}${p.featured&&!out?' featured':''}`;
+  if(tier==='vip') cardCls=`prod-card vip-card${out?' esgotado':''}`;
+  if(tier==='pro') cardCls=`prod-card pro-card${out?' esgotado':''}`;
+  let badge='',strip='';
+  if(tier==='vip'){badge='<span class="card-badge badge-vip">🥇 VIP</span>';strip='<div class="vip-strip">VIP</div>';}
+  else if(tier==='pro'){badge='<span class="card-badge badge-pro">💜 PRO</span>';strip='<div class="pro-strip">PRO</div>';}
+  else{
+    const s=getStatus(p);
+    if(s==='esgotado') badge='<span class="card-badge badge-esgotado">⛔ Esgotado</span>';
+    else if(s==='free') badge='<span class="card-badge badge-free">✅ Grátis</span>';
+    else if(s==='destaque') badge='<span class="card-badge badge-destaque">⭐ Destaque</span>';
+    else if(isB) badge='<span class="card-badge badge-bonus">✨ Bônus</span>';
+    else badge='<span class="card-badge badge-common">Comum</span>';
+    if(p.discount>0&&!out) strip=`<div class="discount-strip">-${p.discount}%</div>`;
+    else if(p.featured&&!out&&getStatus(p)==='destaque') strip='<div class="featured-strip">⭐ Destaque</div>';
+  }
+  let priceHtml='';
+  if(out) priceHtml='<span style="color:var(--muted);font-size:0.8rem">Indisponível</span>';
+  else if(p.free) priceHtml='<span class="price-val"><span style="color:var(--green);font-size:1rem">GRÁTIS</span></span>';
+  else priceHtml=`<span class="price-val"><span class="di">💎</span> <b>${eff}</b>${p.discount>0?`<span class="price-old"> ${p.cost}</span>`:''}</span>`;
+  let stockHtml='';
+  if(p.stock!==null&&p.stock!==undefined){
+    const dotCls=out?'out':p.stock<=5?'low':'';
+    stockHtml=`<div class="stock-info"><span class="stock-dot ${dotCls}"></span><span>${out?'Esgotado':p.stock+' restantes'}</span></div>`;
+  }
+  const bonusTag=isB?`<div class="card-bonus-tag">🎁 +${p.bonus} MC Coins de Bônus</div>`:'';
+  let buyBtnCls=tier==='vip'?'vip-buy':tier==='pro'?'pro-buy':'';
+  const buyBtn=out?'<button class="btn-buy disabled-buy" disabled>Esgotado</button>':
+    p.free?`<button class="btn-buy free-buy" onclick="event.stopPropagation();openBuyCoins('${p.id}')">Resgatar</button>`:
+    `<button class="btn-buy ${buyBtnCls}" onclick="event.stopPropagation();openBuyCoins('${p.id}')">Comprar</button>`;
+  return`<div class="${cardCls}" onclick="${out?'':'openBuyCoins(\''+p.id+'\')'}">
+    ${strip}${badge}
+    <span class="card-icon">${p.icon||'🪙'}</span>
+    <div class="card-name">${p.name}</div>
+    <div class="card-desc">${p.desc}</div>
+    <div class="card-amount"><span class="value">${p.amount}${isB?`<span style="font-size:0.95rem;color:var(--purple)">+${p.bonus}</span>`:''}</span><span class="unit">MC Coins</span></div>
+    ${bonusTag}${stockHtml}
+    <div class="card-price" style="margin-top:12px">${priceHtml}${buyBtn}</div>
+  </div>`;
+}
+
+// ============================================================
+//  DIAMONDS PAGE
+// ============================================================
+function renderDiamonds(){
+  const common=S.diamondPackages.filter(p=>!p.shopType||p.shopType!=='pro');
+  const bonus=common.filter(p=>p.bonus&&p.bonus>0);
+  const commonOnly=common.filter(p=>!p.bonus||p.bonus===0);
+  const combos=S.comboPacks;
+  const evSec=document.getElementById('eventCombosSection');
+  if(combos.length>0){
+    evSec.style.display='block';
+    document.getElementById('eventCombosGrid').innerHTML=combos.map(comboCard).join('');
+  } else evSec.style.display='none';
+  document.getElementById('commonDiamGrid').innerHTML=commonOnly.map(diamCard).join('')||emptyMsg();
+  document.getElementById('bonusDiamGrid').innerHTML=bonus.map(diamCard).join('')||emptyMsg();
+}
+
+function diamCard(p){
+  const eff=effectiveCost(p);
+  const out=isEsgotado(p);
+  const isB=p.bonus>0;
+  let cls=`prod-card diamond-card${isB?' bonus':''}${out?' esgotado':''}${p.featured&&!out?' featured':''}`;
+  let badge='';
+  const s=getStatus(p);
+  if(s==='esgotado') badge='<span class="card-badge badge-esgotado">⛔ Esgotado</span>';
+  else if(s==='free') badge='<span class="card-badge badge-free">✅ Grátis</span>';
+  else if(s==='destaque') badge='<span class="card-badge badge-destaque">⭐ Destaque</span>';
+  else if(isB) badge='<span class="card-badge badge-bonus">✨ Bônus</span>';
+  else badge='<span class="card-badge badge-common">Comum</span>';
+  let strip='';
+  if(p.discount>0&&!out) strip=`<div class="discount-strip">-${p.discount}%</div>`;
+  else if(p.featured&&!out&&s==='destaque') strip='<div class="featured-strip">⭐ Destaque</div>';
+  let priceHtml='';
+  if(out) priceHtml='<span style="color:var(--muted);font-size:0.8rem">Indisponível</span>';
+  else if(p.free) priceHtml='<span class="price-val"><span style="color:var(--green)">GRÁTIS</span></span>';
+  else priceHtml=`<span class="price-val"><span class="rs">R$</span> <b>${eff.toFixed(2).replace('.',',')}</b>${p.discount>0?`<span class="price-old"> ${p.cost.toFixed(2)}</span>`:''}</span>`;
+  let stockHtml='';
+  if(p.stock!==null&&p.stock!==undefined){
+    const dotCls=out?'out':p.stock<=5?'low':'';
+    stockHtml=`<div class="stock-info"><span class="stock-dot ${dotCls}"></span><span>${out?'Esgotado':p.stock+' restantes'}</span></div>`;
+  }
+  const bonusTag=isB?`<div class="card-bonus-tag" style="background:rgba(0,229,255,0.06);border-color:rgba(0,229,255,0.2);color:var(--cyan)">💎 +${p.bonus} Bônus</div>`:'';
+  const buyBtn=out?'<button class="btn-buy disabled-buy" disabled>Esgotado</button>':
+    p.free?`<button class="btn-buy free-buy" onclick="event.stopPropagation();openBuyDiam('${p.id}')">Resgatar</button>`:
+    `<button class="btn-buy diamond-buy" onclick="event.stopPropagation();openBuyDiam('${p.id}')">Comprar</button>`;
+  return`<div class="${cls}" onclick="${out?'':'openBuyDiam(\''+p.id+'\')'}">
+    ${strip}${badge}
+    <span class="card-icon diamond-icon">${p.icon||'💎'}</span>
+    <div class="card-name">${p.name}</div>
+    <div class="card-desc">${p.desc}</div>
+    <div class="card-amount"><span class="value" style="color:var(--cyan)">${p.amount}${isB?`<span style="font-size:0.9rem;color:var(--purple)">+${p.bonus}</span>`:''}</span><span class="unit">💎 Diamantes</span></div>
+    ${bonusTag}${stockHtml}
+    <div class="card-price" style="margin-top:12px">${priceHtml}${buyBtn}</div>
+  </div>`;
+}
+
+function comboCard(p){
+  const out=isEsgotado(p);
+  const used=p.stockUsed||0;
+  const rem=p.stock!=null?Math.max(0,p.stock-used):null;
+  const outReal=rem!==null&&rem<=0;
+  let stockHtml='';
+  if(rem!==null){
+    const pct=p.stock>0?(rem/p.stock)*100:0;
+    const dotCls=outReal?'out':rem<=3?'low':'';
+    stockHtml=`<div class="stock-info" style="margin-top:10px"><span class="stock-dot ${dotCls}"></span><span style="font-size:0.7rem">${outReal?'Esgotado':rem+' restantes'}</span></div>
+    <div class="stock-bar"><div class="stock-fill" style="width:${pct}%;background:${outReal?'var(--red)':rem<=3?'var(--event)':'var(--cyan)'}"></div></div>`;
+  }
+  const buyBtn=outReal?'<button class="btn-buy disabled-buy" disabled>Esgotado</button>':
+    `<button class="btn-buy event-buy" onclick="event.stopPropagation();openBuyCombo('${p.id}')">Garantir</button>`;
+  return`<div class="combo-card${outReal?' esgotado':''}" onclick="${outReal?'':'openBuyCombo(\''+p.id+'\')'}">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+      <div style="display:flex;align-items:center;gap:8px"><span style="font-size:1.6rem">${p.icon||'🎉'}</span><div><div style="font-family:'Orbitron',sans-serif;font-size:0.85rem;font-weight:700;color:var(--text)">${p.name}</div><div style="font-size:0.72rem;color:var(--muted)">${p.desc}</div></div></div>
+      <div class="event-tag">🎉 EVENTO</div>
+    </div>
+    <div class="combo-row">
+      <div class="combo-item"><div class="combo-item-val diam">${p.diamondAmt}</div><div class="combo-item-label">💎 Diamantes</div></div>
+      <div class="combo-plus">+</div>
+      <div class="combo-item"><div class="combo-item-val coin">${p.coinAmt}</div><div class="combo-item-label">🪙 MC Coins</div></div>
+    </div>
+    ${stockHtml}
+    <div class="combo-price-row" style="margin-top:12px">
+      <span class="combo-price">R$ ${p.cost.toFixed(2).replace('.',',')}</span>
+      ${buyBtn}
+    </div>
+  </div>`;
+}
+
+// ============================================================
+//  PREMIUM PAGE
+// ============================================================
+function renderPremium(){
+  const u=S.currentUser;
+  const pl=u?u.premium:null;
+
+  const plans=[
+    {
+      id:'base',cls:'plan-base',badge:'base',badgeTxt:'🥇 Plano Base',name:'Plano Base',icon:'🥇',
+      desc:'Acesso à Loja VIP com 8 pacotes exclusivos de MC Coins e Diamantes.',
+      features:[
+        {icon:'🏪',txt:'Loja VIP desbloqueada (8 pacotes)'},
+        {icon:'🪙',txt:'Pacotes VIP até 700 MC Coins'},
+        {icon:'💎',txt:'Pacotes VIP até 350 Diamantes'},
+        {icon:'✅',txt:'Badge VIP no perfil'},
+        {icon:'❌',txt:'Loja Pro (bloqueada)'},
+        {icon:'❌',txt:'Recompensas semanais (bloqueada)'},
+      ],
+      popular:false
+    },
+    {
+      id:'pro',cls:'plan-pro',badge:'pro',badgeTxt:'💜 Plano Pro',name:'Plano Pro',icon:'💜',
+      desc:'Tudo do Plano Base + Loja Pro exclusiva com 8 pacotes de Coins e 8 de Diamantes separados.',
+      features:[
+        {icon:'🏪',txt:'Loja VIP desbloqueada'},
+        {icon:'💜',txt:'Loja Pro desbloqueada (8 Coins + 8 Diamantes)'},
+        {icon:'🪙',txt:'Pacotes Pro até 700 MC Coins'},
+        {icon:'💎',txt:'Pacotes Pro até 350 Diamantes'},
+        {icon:'✅',txt:'Badge Pro no perfil'},
+        {icon:'❌',txt:'Recompensas semanais (bloqueada)'},
+      ],
+      popular:false
+    },
+    {
+      id:'full',cls:'plan-premium',badge:'premium',badgeTxt:'👑 Premium Full',name:'Premium Full',icon:'👑',
+      desc:'O pacote completo: Lojas VIP + Pro + recompensas automáticas + personalização total do perfil.',
+      features:[
+        {icon:'🏪',txt:'Lojas VIP + Pro desbloqueadas'},
+        {icon:'🎁',txt:'+100 💎 e +300 🪙 a cada 7 dias'},
+        {icon:'🎨',txt:'Temas de cor no perfil (4 opções)'},
+        {icon:'✍️',txt:'Fontes customizadas (Orbitron ou Exo 2)'},
+        {icon:'💎',txt:'Diamante no avatar de perfil'},
+        {icon:'👑',txt:'Badge PREMIUM exclusivo'},
+      ],
+      popular:true
+    },
+  ];
+
+  let html=plans.map(p=>{
+    const isActive=pl===p.id;
+    const activeBadge=isActive?`<div class="plan-active-badge">✅ Plano Ativo</div>`:'';
+    const btn=isActive
+      ?`<button class="btn-activate ${p.badge}" disabled style="opacity:0.5;cursor:default">✅ Já Ativado</button>`
+      :`<button class="btn-activate ${p.badge}" onclick="openPremiumKey('${p.id}','${p.name}','${p.icon}')">🔑 Ativar com KEY</button>`;
+    const popularTag=p.popular?'<div class="most-popular-tag">⭐ MAIS POPULAR</div>':'';
+    return`<div class="plan-card ${p.cls}">
+      ${popularTag}
+      <div class="plan-badge ${p.badge}">${p.badgeTxt}</div>
+      <div class="plan-name">${p.name}</div>
+      <div class="plan-desc">${p.desc}</div>
+      <ul class="plan-features">
+        ${p.features.map(f=>`<li><span class="feat-icon">${f.icon}</span><span>${f.txt}</span></li>`).join('')}
+      </ul>
+      ${activeBadge}
+      ${btn}
+    </div>`;
+  }).join('');
+
+  document.getElementById('premiumPlansGrid').innerHTML=html;
+
+  // Active premium benefits section
+  let activeHtml='';
+  if(u&&pl){
+    if(pl==='full'){
+      const nextReward=u.lastDailyReward?(new Date(u.lastDailyReward+7*24*60*60*1000)).toLocaleDateString('pt-BR'):'Disponível agora!';
+      activeHtml=`<div class="premium-daily-banner">
+        <div><div style="font-family:'Orbitron',sans-serif;font-size:0.88rem;font-weight:700;color:var(--premium)">🎁 Recompensa Semanal Premium</div>
+        <div style="font-size:0.78rem;color:var(--muted);margin-top:4px">+100 💎 Diamantes + 300 🪙 MC Coins toda semana</div>
+        <div style="font-size:0.72rem;color:var(--muted);margin-top:4px">Próxima recompensa: ${nextReward}</div></div>
+        <button class="btn-buy event-buy" style="background:linear-gradient(135deg,var(--premium),#ec4899);color:#fff" onclick="checkDailyReward();toast('Verificado!','info')">🎁 Verificar</button>
+      </div>`;
+    }
+    activeHtml+=`<div style="background:rgba(0,255,136,0.04);border:1px solid rgba(0,255,136,0.2);border-radius:10px;padding:12px 16px;font-size:0.8rem;color:var(--green);margin-bottom:16px">
+      ✅ Você tem <b>${pl==='base'?'Plano Base':pl==='pro'?'Plano Pro':'Premium Full'}</b> ativo. Use o botão acima para ativar um plano superior com uma KEY de admin.</div>`;
+  }
+  document.getElementById('premiumActiveSection').innerHTML=activeHtml;
+}
+
+function openPremiumKey(planId,planName,icon){
+  if(!S.currentUser){openLogin();return;}
+  S.activePremPlan=planId;
+  document.getElementById('premKeyPlanIcon').textContent=icon;
+  document.getElementById('premKeyPlanName').textContent=planName;
+  document.getElementById('premKeyTitle').textContent=`👑 Ativar ${planName}`;
+  document.getElementById('premKeyDesc').textContent=`Insira a KEY fornecida pelo administrador para ativar o ${planName}`;
+  document.getElementById('premiumKeyInput').value='';
+  document.getElementById('premKeyError').classList.remove('show');
+  document.getElementById('premKeyPlanType').value=planId==='base'?'premium_base':planId==='pro'?'premium_pro':'premium_full';
+  openModal('premiumKeyModal');
+}
+
+function confirmActivatePremium(){
+  const keyVal=document.getElementById('premiumKeyInput').value.trim().toUpperCase();
+  const planType=document.getElementById('premKeyPlanType').value;
+  const err=document.getElementById('premKeyError');
+  if(!keyVal){showErr(err,'Insira a KEY de ativação');return;}
+  const keyObj=validateKey(keyVal,planType);
+  if(!keyObj){showErr(err,'KEY inválida, já usada ou incorreta para este plano. Solicite uma nova ao admin.');return;}
+  const u=S.currentUser;
+  const planId=S.activePremPlan;
+  useKey(keyObj,u.id);
+  u.premium=planId;
+  save();applyUserTheme(u);updateNav();
+  closeModal('premiumKeyModal');
+  const planNames={base:'Plano Base',pro:'Plano Pro',full:'Premium Full'};
+  toast(`🎉 ${planNames[planId]} ativado com sucesso!`,'premium',5000);
+  renderPremium();renderShop();
+}
+
+// ============================================================
+//  BUY FLOW - COINS
+// ============================================================
+function openBuyCoins(id){
+  if(!S.currentUser){openLogin();return;}
+  const allPacks=[...S.coinPackages];
+  const p=allPacks.find(x=>x.id===id);
+  if(!p||isEsgotado(p)){toast('Pacote esgotado!','error');return;}
+  // check premium requirement
+  if(p.shopType==='vip'&&!hasPrem(1)){toast('Você precisa do Plano Base ou superior!','error');return;}
+  if(p.shopType==='pro'&&!hasPrem(2)){toast('Você precisa do Plano Pro ou superior!','error');return;}
+  S.activeBuyProd=p;S.activeBuyType='coin';
+  const eff=effectiveCost(p);
+  document.getElementById('buyModalTitle').textContent='Comprar — '+p.name;
+  document.getElementById('buyAmount').textContent=p.amount+(p.bonus?'+'+p.bonus:'');
+  document.getElementById('buyAmountLabel').textContent='MC Coins'+(p.bonus?' (incl. bônus)':'');
+  document.getElementById('buyCost').textContent=p.free?'GRÁTIS':eff+' 💎';
+  const bRow=document.getElementById('buyBonusRow');
+  if(p.bonus>0){bRow.style.display='flex';document.getElementById('buyBonusVal').textContent='+'+p.bonus+' MC Coins';}
+  else bRow.style.display='none';
+  document.getElementById('buyUserDiam').textContent=S.currentUser.diamonds+' 💎';
+  document.getElementById('buyAfter').textContent=(p.free?S.currentUser.diamonds:S.currentUser.diamonds-eff)+' 💎';
+  document.getElementById('buyError').classList.remove('show');
+  openModal('buyModal');
+}
+function confirmBuy(){
+  const p=S.activeBuyProd;if(!p)return;
+  const eff=effectiveCost(p);
+  const err=document.getElementById('buyError');
+  if(!p.free&&S.currentUser.diamonds<eff){showErr(err,'Diamantes insuficientes! Compre mais na aba Diamantes.');return;}
+  const u=S.currentUser;
+  if(!p.free) u.diamonds-=eff;
+  const gained=p.amount+(p.bonus||0);
+  u.mcCoins+=gained;
+  if(p.stock!==null&&p.stock!==undefined&&p.stock>0) p.stock--;
+  const item={id:'inv-'+Date.now(),productId:p.id,productName:p.name,type:'coin',amount:p.amount,bonus:p.bonus||0,
+    cost:p.free?0:eff,costUnit:p.free?'grátis':'diamantes',payMethod:p.free?'Grátis':'Diamantes 💎',
+    date:new Date().toLocaleDateString('pt-BR'),icon:p.icon||'🪙'};
+  u.inventory.push(item);save();refreshBal();closeModal('buyModal');
+  toast(`+${gained} 🪙 MC Coins adicionados!`,'gold');
+}
+
+// ============================================================
+//  BUY FLOW - DIAMONDS (KEY REQUIRED)
+// ============================================================
+function openBuyDiam(id){
+  if(!S.currentUser){openLogin();return;}
+  const p=S.diamondPackages.find(x=>x.id===id);
+  if(!p||isEsgotado(p)){toast('Pacote esgotado!','error');return;}
+  S.activeBuyProd=p;S.activeBuyType='diamond';
+  const eff=effectiveCost(p);
+  document.getElementById('buyDiamTitle').textContent='Comprar — '+p.name;
+  document.getElementById('diamBuyAmount').textContent=p.amount+(p.bonus?'+'+p.bonus:'');
+  document.getElementById('diamBuyLabel').textContent='💎 Diamantes'+(p.bonus?' (incl. bônus)':'');
+  document.getElementById('diamBuyPrice').textContent=p.free?'GRÁTIS':'R$ '+eff.toFixed(2).replace('.',',');
+  const bRow=document.getElementById('diamBuyBonusRow');
+  if(p.bonus>0){bRow.style.display='flex';document.getElementById('diamBuyBonusVal').textContent='+'+p.bonus+' 💎';}
+  else bRow.style.display='none';
+  document.getElementById('diamBuyError').classList.remove('show');
+  document.getElementById('diamKeyInput').value='';
+  resetPayMethods('diamPayMethods','pix');S.payDiamBuy='pix';
+  openModal('buyDiamModal');
+}
+function confirmBuyDiam(){
+  const p=S.activeBuyProd;if(!p)return;
+  const err=document.getElementById('diamBuyError');
+  // Validate KEY
+  const keyVal=document.getElementById('diamKeyInput').value.trim().toUpperCase();
+  if(!keyVal){showErr(err,'Insira a KEY de compra fornecida pelo admin.');return;}
+  const keyObj=validateKey(keyVal,'diamond');
+  if(!keyObj){showErr(err,'KEY inválida, já usada ou expirada. Solicite uma nova ao admin.');return;}
+  const gained=p.amount+(p.bonus||0);
+  const eff=effectiveCost(p);
+  const u=S.currentUser;
+  u.diamonds+=gained;
+  if(p.stock!==null&&p.stock!==undefined&&p.stock>0) p.stock--;
+  const pmLabel=payLabel(S.payDiamBuy);
+  useKey(keyObj,u.id);
+  const item={id:'inv-'+Date.now(),productId:p.id,productName:p.name,type:'diamond',amount:p.amount,bonus:p.bonus||0,
+    cost:p.free?0:eff,costUnit:p.free?'grátis':'R$',payMethod:p.free?'Grátis':pmLabel,
+    date:new Date().toLocaleDateString('pt-BR'),icon:p.icon||'💎'};
+  u.inventory.push(item);save();refreshBal();closeModal('buyDiamModal');
+  toast(`+${gained} 💎 Diamantes adicionados!`,'info');
+}
+
+// ============================================================
+//  BUY FLOW - COMBO (KEY REQUIRED)
+// ============================================================
+function openBuyCombo(id){
+  if(!S.currentUser){openLogin();return;}
+  const p=S.comboPacks.find(x=>x.id===id);if(!p)return;
+  const used=p.stockUsed||0;
+  if(p.stock!==null&&p.stock!==undefined&&(p.stock-used)<=0){toast('Pacote esgotado!','error');return;}
+  S.activeBuyProd=p;S.activeBuyType='combo';
+  document.getElementById('buyComboTitle').textContent='🎉 '+p.name;
+  document.getElementById('comboBuyDiam').textContent=p.diamondAmt;
+  document.getElementById('comboBuyCoins').textContent=p.coinAmt;
+  document.getElementById('comboBuyPrice').textContent='R$ '+p.cost.toFixed(2).replace('.',',');
+  document.getElementById('comboBuyError').classList.remove('show');
+  document.getElementById('comboKeyInput').value='';
+  resetPayMethods('comboPayMethods','pix');S.payComboBuy='pix';
+  openModal('buyComboModal');
+}
+function confirmBuyCombo(){
+  const p=S.activeBuyProd;if(!p)return;
+  const err=document.getElementById('comboBuyError');
+  const keyVal=document.getElementById('comboKeyInput').value.trim().toUpperCase();
+  if(!keyVal){showErr(err,'Insira a KEY de compra fornecida pelo admin.');return;}
+  const keyObj=validateKey(keyVal,'diamond');
+  if(!keyObj){showErr(err,'KEY inválida, já usada ou expirada. Solicite uma nova ao admin.');return;}
+  const u=S.currentUser;
+  u.diamonds+=p.diamondAmt;
+  u.mcCoins+=p.coinAmt;
+  if(p.stock!==null&&p.stock!==undefined){p.stockUsed=(p.stockUsed||0)+1;}
+  useKey(keyObj,u.id);
+  const pmLabel=payLabel(S.payComboBuy);
+  const item={id:'inv-'+Date.now(),productId:p.id,productName:p.name,type:'combo',amount:p.diamondAmt,bonus:p.coinAmt,
+    cost:p.cost,costUnit:'R$',payMethod:pmLabel,
+    date:new Date().toLocaleDateString('pt-BR'),icon:p.icon||'🎉'};
+  u.inventory.push(item);save();refreshBal();closeModal('buyComboModal');
+  toast(`🎉 Combo garantido! +${p.diamondAmt}💎 +${p.coinAmt}🪙`,'event');
+}
+
+function payLabel(pm){return pm==='pix'?'Pix 📱':pm==='credit'?'Cartão de Crédito 💳':'Cartão de Débito 🏦';}
+function selPayDiam(el,m){S.payDiamBuy=m;el.closest('.pay-methods').querySelectorAll('.pay-method').forEach(e=>e.classList.remove('selected'));el.classList.add('selected');}
+function selPayCombo(el,m){S.payComboBuy=m;el.closest('.pay-methods').querySelectorAll('.pay-method').forEach(e=>e.classList.remove('selected'));el.classList.add('selected');}
+function resetPayMethods(containerId,defaultMethod){
+  const c=document.getElementById(containerId);if(!c)return;
+  c.querySelectorAll('.pay-method').forEach(el=>{el.classList.toggle('selected',el.dataset.method===defaultMethod);});
+}
+
+// ============================================================
+//  INVENTORY
+// ============================================================
+function renderInventory(){
+  const el=document.getElementById('inventoryContent');
+  if(!S.currentUser){el.innerHTML='<div class="inv-empty"><div class="big-icon">🔒</div><h3>Faça login</h3><p>para ver seu inventário</p></div>';return;}
+  const inv=S.currentUser.inventory;
+  if(!inv||inv.length===0){el.innerHTML='<div class="inv-empty"><div class="big-icon">🎒</div><h3>Inventário Vazio</h3><p>Compre Coins ou Diamantes para ver seus itens aqui</p></div>';return;}
+  const coins=inv.filter(i=>i.type==='coin');
+  const diams=inv.filter(i=>i.type==='diamond');
+  const combos=inv.filter(i=>i.type==='combo');
+  let html='';
+  if(combos.length){html+=secHead('🎉','Pacotes Evento',combos.length);html+='<div class="inv-grid">'+combos.map(i=>invCard(i)).join('')+'</div>';}
+  if(coins.length){html+=secHead('🪙','MC Coins Comprados',coins.length);html+='<div class="inv-grid">'+coins.map(i=>invCard(i)).join('')+'</div>';}
+  if(diams.length){html+=secHead('💎','Diamantes Comprados',diams.length,'var(--cyan)');html+='<div class="inv-grid">'+diams.map(i=>invCard(i)).join('')+'</div>';}
+  el.innerHTML=html;
+}
+function secHead(dot,label,count,color='var(--gold)'){
+  return`<div class="sec-title" style="margin-bottom:16px;margin-top:8px"><span class="sec-dot" style="background:${color};box-shadow:0 0 8px ${color}"></span>${label} <span style="color:var(--muted);font-weight:400;font-size:0.78rem;margin-left:6px">${count} item(s)</span></div>`;
+}
+function invCard(item){
+  const hasBon=item.bonus&&item.bonus>0;
+  const amtColor=item.type==='diamond'?'diam':'';
+  return`<div class="inv-card" onclick="openInvDetail('${item.id}')">
+    ${hasBon?'<div class="inv-bonus-pip"></div>':''}
+    <div class="inv-card-icon">${item.icon}</div>
+    <div class="inv-card-name">${item.productName}</div>
+    <div class="inv-card-amount ${amtColor}">${item.amount}${hasBon?`<span style="font-size:0.82rem;color:var(--purple)">+${item.bonus}</span>`:''}</div>
+    <div class="inv-card-date">📅 ${item.date}</div>
+    <button class="inv-del-btn" onclick="event.stopPropagation();deleteInvItem('${item.id}')">🗑️</button>
+  </div>`;
+}
+function openInvDetail(itemId){
+  const u=S.currentUser;if(!u)return;
+  const item=u.inventory.find(i=>i.id===itemId);if(!item)return;
+  document.getElementById('invModalIcon').textContent=item.icon;
+  document.getElementById('invModalName').textContent=item.productName;
+  let costStr=item.costUnit==='R$'?'R$ '+item.cost.toFixed(2).replace('.',','):item.costUnit==='grátis'?'Grátis':item.cost+' 💎';
+  document.getElementById('invDetailCost').textContent=costStr;
+  document.getElementById('invDetailPay').textContent=item.payMethod;
+  let amtStr=item.type==='coin'?item.amount+' 🪙':item.type==='diamond'?item.amount+' 💎':item.amount+'💎 + '+item.bonus+'🪙';
+  document.getElementById('invDetailAmt').textContent=amtStr;
+  document.getElementById('invDetailDate').textContent=item.date;
+  document.getElementById('invDetailBonus').textContent=item.type==='combo'?'+'+item.bonus+' MC Coins 🎉':item.bonus>0?'+'+item.bonus+' (Sim 🎁)':'Sem bônus';
+  document.getElementById('invDetailId').textContent=item.productId;
+  openModal('invModal');
+}
+function deleteInvItem(itemId){
+  confirmAction(`Remover o item do inventário?<br><br><strong>Esta ação não pode ser desfeita.</strong>`,()=>{
+    const u=S.currentUser;if(!u)return;
+    u.inventory=u.inventory.filter(i=>i.id!==itemId);
+    save();renderInventory();toast('Item removido do inventário','error');
+  });
+}
+
+// ============================================================
+//  PROFILE
+// ============================================================
+function renderProfile(){
+  const el=document.getElementById('profileContent');
+  if(!S.currentUser){el.innerHTML='<div class="inv-empty"><div class="big-icon">🔒</div><h3>Faça login</h3></div>';return;}
+  const u=S.currentUser;
+  const premLabel={base:'🥇 Plano Base',pro:'💜 Plano Pro',full:'👑 Premium Full'};
+  const headerTheme=u.premium&&u.premiumTheme&&u.premiumTheme!=='default'?`theme-${u.premiumTheme}`:'default';
+  const diamBadge=u.premium==='full'?'<div class="diam-badge">💎</div>':'';
+  const crownBadge=u.isAdmin?'<div class="crown">👑</div>':'';
+  const isPremFull=u.premium==='full';
+
+  // Customization section only for full
+  const customHtml=isPremFull?`
+    <div class="profile-card" style="border-color:rgba(244,114,182,0.3)">
+      <h3 style="color:var(--premium)">🎨 Personalização Premium</h3>
+      <div style="font-size:0.78rem;color:var(--muted);margin-bottom:10px">Tema de Cor</div>
+      <div class="theme-swatches">
+        <div class="swatch default ${(!u.premiumTheme||u.premiumTheme==='default')?'active':''}" onclick="setTheme('default')" title="Padrão"></div>
+        <div class="swatch gold ${u.premiumTheme==='gold'?'active':''}" onclick="setTheme('gold')" title="Gold"></div>
+        <div class="swatch cyan ${u.premiumTheme==='cyan'?'active':''}" onclick="setTheme('cyan')" title="Cyan"></div>
+        <div class="swatch purple-s ${u.premiumTheme==='purple'?'active':''}" onclick="setTheme('purple')" title="Roxo"></div>
+        <div class="swatch pink-s ${u.premiumTheme==='pink'?'active':''}" onclick="setTheme('pink')" title="Rosa"></div>
+      </div>
+      <div style="font-size:0.78rem;color:var(--muted);margin-top:14px;margin-bottom:8px">Fonte</div>
+      <div class="font-btns">
+        <div class="font-btn ${(!u.premiumFont||u.premiumFont==='exo')?'active':''}" onclick="setFont('exo')" style="font-family:'Exo 2',sans-serif">Exo 2</div>
+        <div class="font-btn ${u.premiumFont==='orbitron'?'active':''}" onclick="setFont('orbitron')" style="font-family:'Orbitron',sans-serif">Orbitron</div>
+      </div>
+    </div>`:'';
+
+  el.innerHTML=`
+  <div class="profile-header ${headerTheme}">
+    <div class="profile-avatar">
+      ${crownBadge}${diamBadge}
+      ${u.username[0].toUpperCase()}
+    </div>
+    <div style="flex:1">
+      <div style="font-family:'Orbitron',sans-serif;font-size:1.3rem;font-weight:700">${u.username}</div>
+      <div style="font-size:0.76rem;color:${u.isAdmin?'var(--admin)':u.premium?'var(--premium)':'var(--muted)'};margin-bottom:12px">${u.isAdmin?'👑 CEO / Administrador':u.premium?premLabel[u.premium]:'👤 Jogador'}</div>
+      <div class="profile-stats">
+        <div class="stat"><div class="stat-val c">${u.diamonds}</div><div class="stat-label">Diamantes</div></div>
+        <div class="stat"><div class="stat-val g">${u.mcCoins}</div><div class="stat-label">MC Coins</div></div>
+        <div class="stat"><div class="stat-val">${u.inventory.length}</div><div class="stat-label">Compras</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="profile-grid">
+    <div class="profile-card">
+      <h3>✏️ Editar Perfil</h3>
+      <div class="form-group"><label>Email</label><input class="form-input" id="editEmail" value="${u.email||''}" placeholder="seu@email.com"></div>
+      <div class="form-group"><label>Nova Senha (vazio = manter)</label><input class="form-input" id="editNewPass" type="password" placeholder="Nova senha"></div>
+      <button class="btn-save" onclick="saveProfile()">💾 Salvar</button>
+    </div>
+    <div class="profile-card">
+      <h3>📊 Estatísticas</h3>
+      <div class="info-row"><span class="info-key">Coins comprados</span><span class="info-val" style="color:var(--gold)">${u.inventory.filter(i=>i.type==='coin').length}</span></div>
+      <div class="info-row"><span class="info-key">Diamantes comprados</span><span class="info-val" style="color:var(--cyan)">${u.inventory.filter(i=>i.type==='diamond').length}</span></div>
+      <div class="info-row"><span class="info-key">Pacotes evento</span><span class="info-val" style="color:var(--event)">${u.inventory.filter(i=>i.type==='combo').length}</span></div>
+      <div class="info-row"><span class="info-key">Total MC Coins</span><span class="info-val" style="color:var(--gold)">${u.mcCoins}</span></div>
+      <div class="info-row"><span class="info-key">Premium</span><span class="info-val" style="color:var(--premium)">${u.premium?premLabel[u.premium]:'Sem plano'}</span></div>
+    </div>
+    <div class="profile-card">
+      <h3>🔐 Conta</h3>
+      <div class="info-row"><span class="info-key">Usuário</span><span class="info-val">${u.username}</span></div>
+      <div class="info-row"><span class="info-key">Email</span><span class="info-val">${u.email||'—'}</span></div>
+      <div class="info-row"><span class="info-key">ID</span><span class="info-val" style="font-size:0.7rem;font-family:'Orbitron',sans-serif">${u.id}</span></div>
+      <div class="info-row"><span class="info-key">Cargo</span><span class="info-val" style="color:${u.isAdmin?'var(--admin)':'var(--muted)'}">${u.isAdmin?'CEO':'Jogador'}</span></div>
+      <button class="btn-action danger" onclick="confirmAction('Deseja realmente sair da conta?',logout)">Sair da Conta</button>
+    </div>
+    ${customHtml||''}
+  </div>`;
+}
+function setTheme(t){
+  const u=S.currentUser;if(!u||u.premium!=='full')return;
+  u.premiumTheme=t;save();applyUserTheme(u);renderProfile();toast('Tema aplicado!','premium');
+}
+function setFont(f){
+  const u=S.currentUser;if(!u||u.premium!=='full')return;
+  u.premiumFont=f;save();applyUserTheme(u);renderProfile();toast('Fonte aplicada!','premium');
+}
+function saveProfile(){
+  const u=S.currentUser;
+  const email=document.getElementById('editEmail').value.trim();
+  const pass=document.getElementById('editNewPass').value;
+  if(email) u.email=email;
+  if(pass){if(pass.length<4){toast('Senha mínima: 4 caracteres','error');return;}u.password=pass;}
+  save();toast('Perfil atualizado!','success');renderProfile();
+}
+
+// ============================================================
+//  ADMIN
+// ============================================================
+let curAdminTab='coins';
+function adminTab(name){
+  curAdminTab=name;
+  document.querySelectorAll('.admin-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.admin-section').forEach(s=>s.classList.remove('active'));
+  document.getElementById('atab-'+name).classList.add('active');
+  document.getElementById('asec-'+name).classList.add('active');
+  renderAdmin();
+}
+function renderAdmin(){renderAdminCoins();renderAdminDiamonds();renderAdminCombos();renderAdminKeys();renderAdminUsers();}
+
+function renderAdminCoins(){
+  const tb=document.getElementById('adminCoinsTable');if(!tb)return;
+  const shopLabel={common:'Comum',vip:'🥇 VIP',pro:'💜 Pro'};
+  tb.innerHTML=S.coinPackages.map(p=>`<tr>
+    <td>${p.icon} <b>${p.name}</b></td>
+    <td><b>${p.amount}</b></td>
+    <td>${p.bonus>0?`<span class="tag tag-bonus">+${p.bonus}</span>`:'—'}</td>
+    <td>${p.free?'<span class="tag tag-free">GRÁTIS</span>':p.cost+' 💎'}</td>
+    <td>${p.stock!==null&&p.stock!==undefined?`<span style="color:${p.stock<=5?'var(--red)':'var(--cyan)'}">${p.stock}</span>`:'<span style="color:var(--muted)">∞</span>'}</td>
+    <td>${p.discount>0?`<span class="tag tag-sale">-${p.discount}%</span>`:'—'}</td>
+    <td><span class="tag ${p.shopType==='vip'?'tag-destaque':p.shopType==='pro'?'tag-bonus':'tag-none'}">${shopLabel[p.shopType||'common']}</span></td>
+    <td>${statusTag(p)}</td>
+    <td style="display:flex;gap:5px;flex-wrap:wrap"><button class="btn-edit" onclick="openEditProduct('${p.id}','coin')">✏️</button><button class="btn-del" onclick="reqDelProduct('${p.id}','coin','${p.name}')">🗑️</button></td>
+  </tr>`).join('')||'<tr><td colspan="9" style="color:var(--muted);text-align:center;padding:20px">Nenhum pacote.</td></tr>';
+}
+function renderAdminDiamonds(){
+  const tb=document.getElementById('adminDiamondsTable');if(!tb)return;
+  tb.innerHTML=S.diamondPackages.map(p=>`<tr>
+    <td>${p.icon} <b>${p.name}</b></td>
+    <td><b>${p.amount}</b></td>
+    <td>${p.bonus>0?`<span class="tag tag-bonus">+${p.bonus}</span>`:'—'}</td>
+    <td>${p.free?'<span class="tag tag-free">GRÁTIS</span>':'R$ '+p.cost.toFixed(2).replace('.',',')}</td>
+    <td>${p.stock!==null&&p.stock!==undefined?`<span style="color:${p.stock<=5?'var(--red)':'var(--cyan)'}">${p.stock}</span>`:'<span style="color:var(--muted)">∞</span>'}</td>
+    <td>${p.discount>0?`<span class="tag tag-sale">-${p.discount}%</span>`:'—'}</td>
+    <td>${statusTag(p)}</td>
+    <td style="display:flex;gap:5px;flex-wrap:wrap"><button class="btn-edit" onclick="openEditProduct('${p.id}','diamond')">✏️</button><button class="btn-del" onclick="reqDelProduct('${p.id}','diamond','${p.name}')">🗑️</button></td>
+  </tr>`).join('')||'<tr><td colspan="8" style="color:var(--muted);text-align:center;padding:20px">Nenhum pacote.</td></tr>';
+}
+function renderAdminCombos(){
+  const tb=document.getElementById('adminCombosTable');if(!tb)return;
+  tb.innerHTML=S.comboPacks.map(p=>{
+    const used=p.stockUsed||0;
+    const rem=p.stock!=null?Math.max(0,p.stock-used):null;
+    return`<tr>
+      <td>${p.icon} <b>${p.name}</b><div style="font-size:0.7rem;color:var(--muted)">${p.desc}</div></td>
+      <td style="color:var(--cyan)"><b>${p.diamondAmt}</b></td>
+      <td style="color:var(--gold)"><b>${p.coinAmt}</b></td>
+      <td style="color:var(--green)">R$ ${p.cost.toFixed(2).replace('.',',')}</td>
+      <td>${rem!==null?`<span style="color:${rem<=3?'var(--red)':'var(--cyan)'}">${rem}/${p.stock}</span>`:'<span style="color:var(--muted)">∞</span>'}</td>
+      <td>${rem===0?'<span class="tag tag-esgotado">⛔</span>':'<span class="tag tag-evento">🎉 Ativo</span>'}</td>
+      <td style="display:flex;gap:5px"><button class="btn-edit" onclick="openEditCombo('${p.id}')">✏️</button><button class="btn-del" onclick="reqDelCombo('${p.id}','${p.name}')">🗑️</button></td>
+    </tr>`;
+  }).join('')||'<tr><td colspan="7" style="color:var(--muted);text-align:center;padding:20px">Nenhum pacote evento.</td></tr>';
+}
+function renderAdminKeys(){
+  const tb=document.getElementById('adminKeysTable');if(!tb)return;
+  const typeLabel={diamond:'💎 Diamante',premium_base:'🥇 Premium Base',premium_pro:'💜 Premium Pro',premium_full:'👑 Premium Full'};
+  if(!S.keys.length){tb.innerHTML='<tr><td colspan="5" style="color:var(--muted);text-align:center;padding:20px">Nenhuma key criada. Clique em "+ Key" para gerar.</td></tr>';return;}
+  tb.innerHTML=S.keys.map((k,i)=>`<tr class="${k.used?'key-used':''}">
+    <td><span class="key-val">${k.key}</span><div class="key-meta">Criada em ${k.createdAt}</div></td>
+    <td><span class="tag ${k.type==='diamond'?'tag-bonus':k.type==='premium_full'?'tag-destaque':'tag-none'}">${typeLabel[k.type]||k.type}</span></td>
+    <td>${k.used?'<span class="tag tag-esgotado">✅ Usada</span>':'<span class="tag tag-free">🟢 Disponível</span>'}</td>
+    <td style="font-size:0.75rem;color:var(--muted)">${k.usedBy||'—'}</td>
+    <td>
+      <button class="key-copy-btn" onclick="copyKey('${k.key}')">📋 Copiar</button>
+      <button class="btn-del" style="margin-left:4px" onclick="deleteKey('${k.id}')">🗑️</button>
+    </td>
+  </tr>`).join('');
+}
+function copyKey(k){
+  navigator.clipboard.writeText(k).then(()=>toast(`Key copiada: ${k}`,'info',4000)).catch(()=>{
+    // fallback
+    const el=document.createElement('textarea');el.value=k;document.body.appendChild(el);el.select();document.execCommand('copy');document.body.removeChild(el);
+    toast(`Key copiada: ${k}`,'info',4000);
+  });
+}
+function deleteKey(id){
+  confirmAction('Apagar esta KEY?',()=>{
+    S.keys=S.keys.filter(k=>k.id!==id);save();renderAdminKeys();toast('Key apagada','error');
+  });
+}
+function renderAdminUsers(){
+  const tb=document.getElementById('adminUsersTable');if(!tb)return;
+  const premLabel={base:'🥇 Base',pro:'💜 Pro',full:'👑 Full'};
+  tb.innerHTML=S.users.map(u=>`
+    <tr class="user-row">
+      <td><b>${u.isAdmin?'👑 ':''} ${u.username}</b></td>
+      <td style="color:var(--muted);font-size:0.78rem">${u.email||'—'}</td>
+      <td style="color:var(--cyan)">${u.diamonds}</td>
+      <td style="color:var(--gold)">${u.mcCoins}</td>
+      <td>${u.inventory.length}</td>
+      <td>${u.isAdmin?'<span class="tag" style="background:rgba(255,107,53,0.15);color:var(--admin)">CEO</span>':'<span class="tag tag-none">Jogador</span>'}</td>
+      <td>${u.premium?`<span class="tag tag-destaque">${premLabel[u.premium]}</span>`:'<span class="tag tag-none">—</span>'}</td>
+      <td><button class="btn-edit" onclick="openAdminInv('${u.id}')">🎒 Editar</button></td>
+    </tr>
+  `).join('');
+}
+
+// Product add/edit
+function openAddProduct(type){
+  const isCoin=type==='coin';
+  document.getElementById('prodModalTitle').textContent=isCoin?'Adicionar Pacote de Coins':'Adicionar Pacote de Diamantes';
+  document.getElementById('prodModalSub').textContent='Configure os detalhes do novo pacote';
+  document.getElementById('prodAmtLabel').textContent=isCoin?'Quantidade (MC Coins)':'Quantidade (Diamantes)';
+  document.getElementById('prodCostLabel').textContent=isCoin?'Custo em Diamantes':'Preço em R$';
+  document.getElementById('prodEditId').value='';
+  document.getElementById('prodEditType').value=type;
+  ['prodName','prodDesc','prodAmount','prodCost','prodStock'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('prodBonus').value='0';
+  document.getElementById('prodDiscount').value='0';
+  document.getElementById('prodFree').checked=false;
+  document.getElementById('prodFeatured').checked=false;
+  document.getElementById('prodIcon').value=isCoin?'🪙':'💎';
+  document.getElementById('prodShopType').value='common';
+  const shopSel=document.getElementById('prodShopType');
+  if(!isCoin){shopSel.style.display='none';}else{shopSel.style.display='';}
+  document.getElementById('prodError').classList.remove('show');
+  openModal('productModal');
+}
+function openEditProduct(id,type){
+  const arr=type==='coin'?S.coinPackages:S.diamondPackages;
+  const p=arr.find(x=>x.id===id);if(!p)return;
+  const isCoin=type==='coin';
+  document.getElementById('prodModalTitle').textContent='Editar Pacote';
+  document.getElementById('prodModalSub').textContent='Modifique os dados do pacote';
+  document.getElementById('prodAmtLabel').textContent=isCoin?'Quantidade (MC Coins)':'Quantidade (Diamantes)';
+  document.getElementById('prodCostLabel').textContent=isCoin?'Custo em Diamantes':'Preço em R$';
+  document.getElementById('prodEditId').value=id;
+  document.getElementById('prodEditType').value=type;
+  document.getElementById('prodName').value=p.name;
+  document.getElementById('prodDesc').value=p.desc;
+  document.getElementById('prodAmount').value=p.amount;
+  document.getElementById('prodBonus').value=p.bonus||0;
+  document.getElementById('prodCost').value=p.cost;
+  document.getElementById('prodDiscount').value=p.discount||0;
+  document.getElementById('prodFree').checked=!!p.free;
+  document.getElementById('prodFeatured').checked=!!p.featured;
+  document.getElementById('prodStock').value=p.stock!==null&&p.stock!==undefined?p.stock:'';
+  document.getElementById('prodIcon').value=p.icon||'🪙';
+  document.getElementById('prodShopType').value=p.shopType||'common';
+  const shopSel=document.getElementById('prodShopType');
+  shopSel.style.display=isCoin?'':'none';
+  document.getElementById('prodError').classList.remove('show');
+  openModal('productModal');
+}
+function saveProduct(){
+  const err=document.getElementById('prodError');
+  const id=document.getElementById('prodEditId').value;
+  const type=document.getElementById('prodEditType').value;
+  const name=document.getElementById('prodName').value.trim();
+  const desc=document.getElementById('prodDesc').value.trim();
+  const amount=parseInt(document.getElementById('prodAmount').value)||0;
+  const bonus=parseInt(document.getElementById('prodBonus').value)||0;
+  const cost=parseFloat(document.getElementById('prodCost').value)||0;
+  const discount=Math.min(100,parseInt(document.getElementById('prodDiscount').value)||0);
+  const free=document.getElementById('prodFree').checked;
+  const featured=document.getElementById('prodFeatured').checked;
+  const stockVal=document.getElementById('prodStock').value.trim();
+  const stock=stockVal===''?null:parseInt(stockVal)||0;
+  const icon=document.getElementById('prodIcon').value.trim()||'🪙';
+  const shopType=type==='coin'?(document.getElementById('prodShopType').value||'common'):'common';
+  if(!name||!amount){showErr(err,'Nome e quantidade são obrigatórios');return;}
+  const arr=type==='coin'?S.coinPackages:S.diamondPackages;
+  if(id){
+    const idx=arr.findIndex(x=>x.id===id);
+    if(idx>=0) arr[idx]={...arr[idx],name,desc,amount,bonus,cost,discount,free,featured,stock,icon,shopType};
+    toast('Pacote atualizado!','success');
+  } else {
+    arr.push({id:(type==='coin'?'cp':'dp')+'-'+Date.now(),name,desc,amount,bonus,cost,discount,free,featured,stock,icon,type,shopType});
+    toast('Pacote adicionado!','success');
+  }
+  save();closeModal('productModal');renderAdmin();renderShop();renderDiamonds();
+}
+function reqDelProduct(id,type,name){
+  confirmAction(`Apagar o pacote <strong>"${name}"</strong>?<br><br>Esta ação não pode ser desfeita.`,()=>{
+    if(type==='coin') S.coinPackages=S.coinPackages.filter(x=>x.id!==id);
+    else S.diamondPackages=S.diamondPackages.filter(x=>x.id!==id);
+    save();renderAdmin();renderShop();renderDiamonds();toast('Pacote removido','error');
+  });
+}
+
+// Combo add/edit
+function openAddCombo(){
+  document.getElementById('comboModalTitle').textContent='🎉 Criar Pacote Evento';
+  document.getElementById('comboEditId').value='';
+  ['comboName','comboDesc','comboDiamAmt','comboCoinAmt','comboPrice','comboStock'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('comboIcon').value='🎉';
+  document.getElementById('comboError').classList.remove('show');
+  openModal('comboModal');
+}
+function openEditCombo(id){
+  const p=S.comboPacks.find(x=>x.id===id);if(!p)return;
+  document.getElementById('comboModalTitle').textContent='✏️ Editar Pacote Evento';
+  document.getElementById('comboEditId').value=id;
+  document.getElementById('comboName').value=p.name;
+  document.getElementById('comboDesc').value=p.desc;
+  document.getElementById('comboDiamAmt').value=p.diamondAmt;
+  document.getElementById('comboCoinAmt').value=p.coinAmt;
+  document.getElementById('comboPrice').value=p.cost;
+  document.getElementById('comboStock').value=p.stock!==null&&p.stock!==undefined?p.stock:'';
+  document.getElementById('comboIcon').value=p.icon||'🎉';
+  document.getElementById('comboError').classList.remove('show');
+  openModal('comboModal');
+}
+function saveCombo(){
+  const err=document.getElementById('comboError');
+  const id=document.getElementById('comboEditId').value;
+  const name=document.getElementById('comboName').value.trim();
+  const desc=document.getElementById('comboDesc').value.trim();
+  const diamondAmt=parseInt(document.getElementById('comboDiamAmt').value)||0;
+  const coinAmt=parseInt(document.getElementById('comboCoinAmt').value)||0;
+  const cost=parseFloat(document.getElementById('comboPrice').value)||0;
+  const stockVal=document.getElementById('comboStock').value.trim();
+  const stock=stockVal===''?null:parseInt(stockVal)||0;
+  const icon=document.getElementById('comboIcon').value.trim()||'🎉';
+  if(!name||!diamondAmt||!coinAmt){showErr(err,'Nome, diamantes e coins são obrigatórios');return;}
+  if(id){
+    const idx=S.comboPacks.findIndex(x=>x.id===id);
+    if(idx>=0){const old=S.comboPacks[idx];S.comboPacks[idx]={...old,name,desc,diamondAmt,coinAmt,cost,stock,icon};}
+    toast('Pacote evento atualizado!','event');
+  } else {
+    S.comboPacks.push({id:'cb-'+Date.now(),name,desc,diamondAmt,coinAmt,cost,stock,stockUsed:0,icon,type:'combo'});
+    toast('Pacote evento criado! 🎉','event');
+  }
+  save();closeModal('comboModal');renderAdmin();renderDiamonds();
+}
+function reqDelCombo(id,name){
+  confirmAction(`Apagar o pacote evento <strong>"${name}"</strong>?`,()=>{
+    S.comboPacks=S.comboPacks.filter(x=>x.id!==id);
+    save();renderAdmin();renderDiamonds();toast('Pacote evento removido','error');
+  });
+}
+
+// Admin Inventory
+function openAdminInv(userId){
+  const u=S.users.find(x=>x.id===userId);if(!u)return;
+  document.getElementById('adminInvUserId').value=userId;
+  document.getElementById('adminInvSub').textContent=`Gerenciar inventário de ${u.username}`;
+  document.getElementById('adminInvAmt').value='';
+  document.getElementById('adminInvBonus').value='0';
+  renderAdminInvList(userId);
+  openModal('adminInvModal');
+}
+function renderAdminInvList(userId){
+  const u=S.users.find(x=>x.id===userId);if(!u)return;
+  const el=document.getElementById('adminInvList');
+  if(!u.inventory.length){el.innerHTML='<div style="color:var(--muted);font-size:0.82rem;padding:10px 0">Inventário vazio.</div>';return;}
+  el.innerHTML=u.inventory.map(item=>`
+    <div class="inv-admin-card">
+      <span style="font-size:1.4rem">${item.icon}</span>
+      <div style="flex:1">
+        <div style="font-size:0.8rem;font-weight:700">${item.productName}</div>
+        <div style="font-size:0.7rem;color:var(--muted)">${item.amount}${item.bonus>0?' +'+item.bonus+' bônus':''} · ${item.date}</div>
+      </div>
+      <button class="inv-admin-card-del" onclick="adminDelInvItem('${userId}','${item.id}')">✕</button>
+    </div>
+  `).join('');
+}
+function adminAddInvItem(){
+  const uid=document.getElementById('adminInvUserId').value;
+  const u=S.users.find(x=>x.id===uid);if(!u)return;
+  const type=document.getElementById('adminInvType').value;
+  const amount=parseInt(document.getElementById('adminInvAmt').value)||0;
+  const bonus=parseInt(document.getElementById('adminInvBonus').value)||0;
+  const payMethod=document.getElementById('adminInvPay').value;
+  if(!amount){toast('Informe a quantidade','error');return;}
+  const isCoin=type==='coin';
+  const icon=isCoin?'🪙':'💎';
+  if(isCoin){u.mcCoins+=amount+bonus;}else{u.diamonds+=amount+bonus;}
+  const item={id:'inv-'+Date.now(),productId:'admin-grant',productName:`Grant Admin (${isCoin?'MC Coins':'Diamantes'})`,type,
+    amount,bonus,cost:0,costUnit:'grátis',payMethod,date:new Date().toLocaleDateString('pt-BR'),icon};
+  u.inventory.push(item);
+  save();refreshBal();renderAdminInvList(uid);renderAdminUsers();
+  toast(`Adicionado ${amount}${bonus?'+'+bonus:''} ${isCoin?'🪙':'💎'} para ${u.username}`,'success');
+}
+function adminDelInvItem(userId,itemId){
+  confirmAction('Remover este item do inventário do usuário?',()=>{
+    const u=S.users.find(x=>x.id===userId);if(!u)return;
+    const item=u.inventory.find(i=>i.id===itemId);
+    if(item){
+      if(item.type==='coin') u.mcCoins=Math.max(0,u.mcCoins-(item.amount+(item.bonus||0)));
+      else if(item.type==='diamond') u.diamonds=Math.max(0,u.diamonds-(item.amount+(item.bonus||0)));
+    }
+    u.inventory=u.inventory.filter(i=>i.id!==itemId);
+    save();refreshBal();renderAdminInvList(userId);renderAdminUsers();toast('Item removido','error');
+  });
+}
+
+// ============================================================
+//  CONFIRM POPUP
+// ============================================================
+function confirmAction(descHtml,cb){
+  S.confirmCb=cb;
+  document.getElementById('confirmDesc').innerHTML=descHtml;
+  document.getElementById('confirmOverlay').classList.add('open');
+}
+function confirmYes(){document.getElementById('confirmOverlay').classList.remove('open');if(S.confirmCb){S.confirmCb();S.confirmCb=null;}}
+function confirmNo(){document.getElementById('confirmOverlay').classList.remove('open');S.confirmCb=null;}
+
+// ============================================================
+//  MODAL UTILS
+// ============================================================
+function openModal(id){document.getElementById(id).classList.add('open');}
+function closeModal(id){document.getElementById(id).classList.remove('open');}
+function showErr(el,msg){el.textContent=msg;el.classList.add('show');}
+
+document.querySelectorAll('.modal-overlay').forEach(o=>{
+  o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('open');});
+});
+document.getElementById('confirmOverlay').addEventListener('click',e=>{
+  if(e.target===document.getElementById('confirmOverlay'))confirmNo();
+});
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape')document.querySelectorAll('.modal-overlay.open,.confirm-overlay.open').forEach(m=>m.classList.remove('open'));
+  if(e.key==='Enter'){
+    if(document.getElementById('loginModal').classList.contains('open'))doLogin();
+    if(document.getElementById('registerModal').classList.contains('open'))doRegister();
+  }
+});
+
+// ============================================================
+//  TOAST
+// ============================================================
+function toast(msg,type='info',dur=3500){
+  const icons={success:'✅',error:'❌',info:'💎',gold:'🪙',event:'🎉',premium:'👑',vip:'🥇'};
+  const d=document.createElement('div');
+  d.className=`toast ${type}`;
+  d.innerHTML=`<span>${icons[type]||'ℹ️'}</span><span>${msg}</span>`;
+  document.getElementById('toastContainer').appendChild(d);
+  setTimeout(()=>d.remove(),dur);
+}
+
+// ============================================================
+//  CANVAS BG
+// ============================================================
+(()=>{
+  const cv=document.getElementById('bgCanvas'),ctx=cv.getContext('2d');
+  let W,H,stars=[];
+  const resize=()=>{W=cv.width=innerWidth;H=cv.height=innerHeight;};
+  resize();addEventListener('resize',resize);
+  for(let i=0;i<130;i++)stars.push({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.1+0.2,s:Math.random()*0.3+0.1,o:Math.random(),d:Math.random()>.5?1:-1});
+  (function draw(){
+    ctx.clearRect(0,0,W,H);
+    stars.forEach(s=>{
+      s.o+=s.s*0.008*s.d;if(s.o>1||s.o<0)s.d*=-1;
+      ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+      ctx.fillStyle=`rgba(245,197,24,${s.o*0.35})`;ctx.fill();
+    });
+    requestAnimationFrame(draw);
+  })();
+})();
+
+// ============================================================
+//  INIT
+// ============================================================
+renderShop();
+renderDiamonds();
+renderPremium();
+if(S.currentUser){updateNav();renderInventory();}
+</script>
+</body>
+</html>
