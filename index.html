@@ -119,24 +119,24 @@ nav{
 .mobile-menu-overlay{
   display:none;
   position:fixed;
-  top:0;
+  top:64px;
   left:0;
   right:0;
   bottom:0;
-  background:rgba(7,9,15,0.7);
-  backdrop-filter:blur(6px);
-  z-index:195;
+  background:rgba(7,9,15,0.6);
+  backdrop-filter:blur(4px);
+  z-index:150;
 }
 .mobile-menu-side{
   display:none;
   position:fixed;
-  top:0;
+  top:64px;
   right:-300px;
   width:280px;
-  height:100vh;
+  height:calc(100vh - 64px);
   background:var(--bg2);
   border-left:1px solid var(--border);
-  z-index:200;
+  z-index:160;
   padding:0;
   transition:right 0.3s cubic-bezier(0.4,0,0.2,1);
   flex-direction:column;
@@ -155,6 +155,7 @@ nav{
   cursor:pointer;
   line-height:1;
   transition:color .2s;
+  z-index:10;
 }
 .mobile-menu-close:hover{color:var(--text)}
 .mobile-menu-header{
@@ -827,9 +828,10 @@ footer span{color:var(--gold);font-weight:600}
   .logo span{font-size:1.1rem}
 
   /* Mobile Menu Side Panel */
-  .mobile-menu-overlay{display:block}
-  .mobile-menu-side{display:flex}
-  .mobile-menu-side:not(.active){right:-300px}
+  .mobile-menu-overlay{display:none}
+  .mobile-menu-overlay.active{display:block}
+  .mobile-menu-side{display:none}
+  .mobile-menu-side.active{display:flex}
 
   /* Responsividade das páginas */
   .page{padding:16px 12px}
@@ -1635,15 +1637,27 @@ function genKeyStr(){
   let k='';for(let i=0;i<12;i++){if(i===4||i===8)k+='-';k+=chars[Math.floor(Math.random()*chars.length)];}
   return k;
 }
-function genKey(type){
-  const k={id:'key-'+Date.now(),key:genKeyStr(),type,used:false,usedBy:null,createdAt:new Date().toLocaleDateString('pt-BR')};
+function genKey(type, targetProductId=null){
+  const k={
+    id:'key-'+Date.now(),
+    key:genKeyStr(),
+    type,
+    targetProductId,
+    used:false,
+    usedBy:null,
+    createdAt:new Date().toLocaleDateString('pt-BR')
+  };
   S.keys.push(k);save();renderAdminKeys();
   toast(`Key criada: ${k.key}`,'info',6000);
 }
-function validateKey(inputVal,expectedType){
+function validateKey(inputVal,expectedType, targetProductId=null){
   const v=inputVal.trim().toUpperCase();
   const k=S.keys.find(k=>k.key===v&&k.type===expectedType&&!k.used);
-  return k||null;
+  if(!k) return null;
+  if(targetProductId && k.targetProductId && k.targetProductId!==targetProductId){
+    return null;
+  }
+  return k;
 }
 function useKey(keyObj,userId){
   keyObj.used=true;
